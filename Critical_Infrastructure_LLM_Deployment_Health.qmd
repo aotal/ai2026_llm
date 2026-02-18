@@ -1,0 +1,300 @@
+---
+title: "Infraestructura Crítica para LLMs Sanitarios"
+subtitle: "Protocolos de Contexto, Validación y Soberanía de Datos (2025-2026)"
+format:
+  revealjs:
+    width: 1920
+    height: 1080
+    margin: 0.08
+    min-scale: 0.2
+    max-scale: 2.0
+    theme: [default, Critical_Infrastructure_LLM_Deployment_Health.scss]
+    controls: true
+    progress: true
+    center: false
+    hash: true
+    transition: fade
+    slide-number: c/t
+    code-line-numbers: true
+    citations-hover: true
+    bibliography: references.bib
+    lang: es
+---
+
+# Introducción: El Cambio de Paradigma {background-color="#020617"}
+
+## Del "Hype" a la Ingeniería Robusta
+
+::: {.columns}
+::: {.column width="50%"}
+### Fase 1: Fascinación (2023-2024)
+* Enfoque en capacidad generativa bruta.
+* Aprobación de exámenes como <abbr title="United States Medical Licensing Examination">USMLE</abbr>.
+* Pilotos aislados ("Juguetes tecnológicos").
+:::
+
+::: {.column width="50%"}
+### Fase 2: Ingeniería Crítica (2025-2026)
+* **Foco:** Infraestructura y "Módulo 4".
+* Interoperabilidad Semántica.
+* Seguridad de Datos Inquebrantable.
+* <abbr title="Large Language Models - Grandes Modelos de Lenguaje">LLMs</abbr> como sistemas operativos, no solo chatbots.
+:::
+:::
+
+::: {.fragment}
+::: {.callout-note title="Advertencia Fundamental"}
+"Los modelos más sofisticados son peligrosos si carecen de acceso seguro al contexto clínico o si sus alucinaciones no son mitigadas."
+:::
+:::
+
+## Los 3 Pilares de la Nueva Infraestructura
+
+1.  **Protocolo de Contexto de Modelo (<abbr title="Model Context Protocol - Estándar abierto de conexión">MCP</abbr>)**:
+    * El "USB-C" de la <abbr title="Inteligencia Artificial">IA</abbr> para resolver la interoperabilidad.
+    * Conexión estandarizada con servidores <abbr title="Fast Healthcare Interoperability Resources">FHIR</abbr> [@CILDH_ref2026enhancing].
+
+2.  **Validación Clínica Avanzada**:
+    * Abandono de métricas <abbr title="Procesamiento de Lenguaje Natural">PNL</abbr> obsoletas (ROUGE/BLEU).
+    * Adopción de marcos holísticos: **MedHELM** y **CLEVER** [@CILDH_ref2026unveiling].
+
+3.  **Privacidad y Soberanía**:
+    * Estrategias *On-Premise* vs *Cloud*.
+    * Tecnologías de seguridad: <abbr title="Attribute-Based Access Control - Control de Acceso Basado en Atributos">ABAC</abbr> y Enclaves Seguros.
+
+# 1. Interoperabilidad: Model Context Protocol (MCP) {background-color="#1e293b"}
+
+## El Problema de las Integraciones Ad-Hoc
+
+::: {.r-fit-text}
+Antes: Cada conexión requería una "transfusión" de código costosa.
+:::
+
+::: {.columns}
+::: {.column width="45%"}
+**Enfoque Tradicional**
+* Integraciones API frágiles ("Custom Pipelines").
+* Mantenimiento insostenible `n * m` conexiones.
+* <abbr title="Electronic Health Record - Historia Clínica Electrónica">EHR</abbr> (Epic/Cerner) <-> Modelo (GPT/Llama).
+:::
+
+
+
+::: {.column width="50%"}
+**La Solución <abbr title="Model Context Protocol">MCP</abbr>**
+* Estándar abierto (Open Standard).
+* **Analogía Médica:** El "Donante Universal (O-)" de la infraestructura de datos.
+* Cualquier "Host" de IA conecta con cualquier "Servidor" de datos.
+
+```{mermaid}
+graph TD
+    subgraph "Caos (Tradicional)"
+    A[EHR] <--> B[GPT-4]
+    A <--> C[Llama 3]
+    D[PACS] <--> B
+    D <--> C
+    end
+    
+    subgraph "Orden (MCP)"
+    H1[EHR] --> M((MCP))
+    H2[PACS] --> M
+    M --> AI1[GPT-4]
+    M --> AI2[Llama 3]
+    end
+    
+    style M fill:#38bdf8,stroke:#fff,stroke-width:2px,color:#000
+```
+:::
+:::
+
+## Arquitectura del MCP
+
+```{mermaid}
+%%| fig-width: 100%
+graph LR
+    subgraph Host ["HOST (EHR / App Médica)"]
+        direction TB
+        UI["Interfaz Usuario Médico"]
+        LLM["Modelo IA / Agente"]
+        Client["MCP Client (Traductor Universal)"]
+    end
+
+    subgraph ServerLayer ["CAPA SERVIDOR MCP"]
+        Server["MCP Server (FHIR / SQL)"]
+        Tool1["Herramienta: search_patient"]
+        Tool2["Herramienta: get_labs"]
+        Res1["Recurso: Prompts Clínicos"]
+    end
+
+    subgraph Data ["FUENTE DE DATOS"]
+        DB[("Base de Datos FHIR")]
+        PACS[("Imágenes PACS")]
+    end
+
+    LLM --> Client
+    Client -- "JSON-RPC (Stdio/SSE)" --> Server
+    Server --> DB
+    Server --> PACS
+
+```
+
+* **Host:** Contenedor de la IA (Chatbot, IDE).
+* **Client:** Mantiene conexión 1:1, abstrae el transporte.
+* **Server:** Expone datos y herramientas (<abbr title="Fast Healthcare Interoperability Resources">FHIR</abbr>, <abbr title="Picture Archiving and Communication System">PACS</abbr>).
+
+## Revolución FHIR-MCP: El Puente Semántico
+
+Los servidores <abbr title="Model Context Protocol">MCP</abbr> actúan como **Puentes Semánticos** sobre la complejidad de <abbr title="Fast Healthcare Interoperability Resources">FHIR</abbr>.
+
+| Componente | Función Técnica y Clínica |
+| --- | --- |
+| **Interfaz Lenguaje Natural** | Permite consultas semánticas ("Tendencia HbA1c último año") sin SQL manual. |
+| **Validación Terminológica** | Integra <abbr title="Systematized Nomenclature of Medicine -- Clinical Terms">SNOMED CT</abbr> y <abbr title="Logical Observation Identifiers Names and Codes">LOINC</abbr> para prevenir alucinaciones de códigos. |
+| **Autenticación** | Maneja **SMART on FHIR** y OAuth2 para trazabilidad del usuario humano. |
+| **Herramientas Adaptativas** | Permite al agente explorar el esquema de datos (`request_generic_resource`) y recuperarse de errores. |
+
+: Componentes críticos de un servidor MCP FHIR [@CILDH_ref2026enhancing]
+
+## Seguridad Granular (ABAC)
+
+El <abbr title="Model Context Protocol">MCP</abbr> implementa un modelo de seguridad de **mínimo privilegio**.
+
+::: {.callout-warning title="Prevención de Prompt Injection"}
+Incluso si un usuario malicioso convence al <abbr title="Large Language Model">LLM</abbr> de "borrar la base de datos", el modelo **no posee la herramienta** técnica para hacerlo si el servidor <abbr title="Model Context Protocol">MCP</abbr> no se la ha entregado bajo el contexto del usuario actual.
+:::
+
+* **Control de Acceso Basado en Atributos (<abbr title="Attribute-Based Access Control">ABAC</abbr>):**
+* Enfermera -> `leer_signos_vitales` (Permitido) | `leer_genómica` (Bloqueado).
+* Administrador -> `delete_patient_record` (Permitido con 2FA).
+* Referencia: [@CILDH_khan2021granular].
+
+
+
+# 2. Infraestructura: Estrategia y Hardware {background-color="#334155"}
+
+## Economía del Despliegue: Cloud vs. On-Premise
+
+Comparativa de Costo Total de Propiedad (<abbr title="Total Cost of Ownership">TCO</abbr>) para 2026 [@CILDH_ref2026a].
+
+| Factor | Cloud (SaaS/PaaS) | On-Premise (Local) |
+| --- | --- | --- |
+| **Costo Estructural** | <abbr title="Operational Expenditure - Gastos Operativos">OPEX</abbr>: Variable puro. | <abbr title="Capital Expenditure - Inversiones de Capital">CAPEX</abbr>: Inversión inicial alta, coste marginal ~0. |
+| **Escalabilidad** | Lineal/Exponencial (Riesgo de "factura sorpresa"). | Estable (Ideal para uso 24/7 intensivo). |
+| **Privacidad** | Datos viajan a terceros (Requiere BAA). | Soberanía total (Datos no salen del hospital). |
+| **Latencia** | Depende de la red. | Ultra-baja (Red local). |
+
+::: {.fragment}
+**Punto de Equilibrio:** Para un hospital universitario, el modelo local es más económico tras **12-18 meses** de operación continua.
+:::
+
+## Hardware y el Cuello de Botella de la VRAM
+
+El límite no es la <abbr title="Central Processing Unit">CPU</abbr>, es la Memoria de Video (<abbr title="Video Random Access Memory">VRAM</abbr>).
+
+::: {.columns}
+::: {.column width="50%"}
+
+### Nivel Investigación / Pyme
+
+* **Hardware:** 2x NVIDIA RTX 4090 (48GB total) o Mac Studio (M3 Ultra 192GB).
+* **Capacidad:** Modelos cuantizados de 70B parámetros.
+* **Uso:** Pruebas de concepto, chat interactivo local.
+:::
+
+::: {.column width="50%"}
+
+### Nivel Infraestructura Crítica
+
+* **Hardware:** NVIDIA H100 / B200 (80GB+ HBM3).
+* **Capacidad:** Modelos 405B o concurrencia masiva.
+* **Ancho de Banda:** 3+ TB/s para servir a cientos de usuarios.
+:::
+:::
+
+## La Cuantización como Habilitador
+
+Tecnología clave para democratizar la IA en salud [@CILDH_ref2026quantized].
+
+* **Definición:** Reducción de precisión de pesos (FP16 -> 4-bits).
+* **Impacto:** Reducción del uso de memoria en un **70-80%**.
+* **Degradación:** Clínicamente insignificante (<1-2% en benchmarks MedQA).
+
+::: {.callout-note title="Analogía: Hospitales de Campaña"}
+Permite desplegar "IA de Borde" en estaciones de enfermería (hardware modesto) para tareas inmediatas sin depender del "Centro de Datos Central".
+:::
+
+# 3. Validación Clínica y Seguridad {background-color="#0f172a"}
+
+## Más allá de las Métricas de PNL Tradicionales
+
+Las métricas de ingeniería (ROUGE, BLEU) son **peligrosas** en medicina [@CILDH_ref2026unveiling].
+
+1. **Problema de la Negación:**
+* IA: "El paciente **tiene** cáncer".
+* Ref: "El paciente **no tiene** cáncer".
+* *Resultado:* ROUGE alto (superposición léxica), error clínico catastrófico.
+
+
+2. **Problema de la Exactitud (Accuracy):**
+* En enfermedades raras (1%), predecir siempre "Sano" da 99% accuracy pero 0% utilidad.
+
+
+
+## Nuevos Marcos de Evaluación
+
+### Marco CLEVER (Revisión Experta)
+
+Evaluación cualitativa en 3 dimensiones [@ACASRFKocaman2025Clinical]:
+
+1. **Facticidad:** ¿Es verdad? (Penalización estricta de alucinaciones).
+2. **Relevancia Clínica:** ¿Ayuda a decidir?
+3. **Concisión:** ¿Evita verborrea en situaciones críticas?
+
+### Marco MedHELM (Benchmarking Automático)
+
+Estándar para tareas a escala (121 tareas clínicas):
+
+* Apoyo a la decisión.
+* Resumen de notas.
+* Comunicación al paciente.
+
+## Privacidad: HIPAA vs GDPR y "Air-Gap"
+
+Estrategias de defensa en profundidad para datos sensibles (<abbr title="Protected Health Information">PHI</abbr>).
+
+::: {.columns}
+::: {.column width="50%"}
+**Diferencias Regulatorias**
+
+* **<abbr title="General Data Protection Regulation">GDPR</abbr> (UE):** Soberanía estricta, derecho al olvido (difícil en pesos neuronales).
+* **<abbr title="Health Insurance Portability and Accountability Act">HIPAA</abbr> (EEUU):** Foco en seguridad y BAA.
+:::
+
+::: {.column width="50%"}
+**Arquitectura RAG Privada**
+
+* Los datos residen en Bases Vectoriales, NO en el modelo.
+* Permite "olvidar" (borrar vectores).
+* **Air-Gap:** El "Campo Estéril" quirúrgico donde los datos nunca tocan internet pública.
+:::
+:::
+
+# Conclusión: Ecosistema Híbrido 2026 {background-color="#4c1d95"}
+
+## Hacia una Orquestación Inteligente
+
+No existe "un modelo para gobernarlos a todos". El futuro es híbrido:
+
+1. **Cerebro Central:** Modelos Frontera (GPT-5, Claude 3.7) para segundas opiniones complejas.
+2. **IA de Borde:** Modelos Abiertos (<abbr title="Open Source - Pesos Abiertos">Llama 4</abbr>, BioMistral) para tareas rutinarias y privacidad [@ACASRFNowak2025Privacyensuring].
+3. **Sistema Nervioso:** <abbr title="Model Context Protocol">MCP</abbr> conectando todo con <abbr title="Fast Healthcare Interoperability Resources">FHIR</abbr>.
+4. **Sistema Inmunológico:** Validación continua (**MedHELM**) y seguridad (**ABAC**).
+
+::: {.r-fit-text}
+De la "Curiosidad Tecnológica" a la Infraestructura Estructural.
+:::
+
+## Referencias Seleccionadas
+
+::: {#refs}
+:::

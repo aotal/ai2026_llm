@@ -1,0 +1,401 @@
+---
+title: "Fundamentos y Arquitectura de LLMs en Medicina"
+subtitle: "De la Tokenización al Razonamiento Clínico"
+author:
+  - name: "Dr. Generativo" # Placeholder, ajustar si se conoce el nombre real
+    affiliations: "Hospital Universitario Virtual"
+date: last-modified
+date-format: "D MMMM, YYYY"
+format:
+  revealjs:
+    # Geometría y Escala (1080p nativo)
+    width: 1920
+    height: 1080
+    margin: 0.05
+    min-scale: 0.2
+    max-scale: 2.0
+    
+    # Navegación y UX
+    controls: true
+    progress: true
+    history: true
+    hash: true
+    center: false
+    navigation-mode: linear
+    link-external-newwindow: true
+    
+    # Estética y Código
+    theme: [default, LLM_Fundamentals_Architecture_Medicine.scss]
+    code-line-numbers: true
+    slide-number: c/t
+    
+    # Referencias
+    bibliography: references.bib
+    csl: american-medical-association.csl
+
+    # Publicación
+    embed-resources: false
+    lang: es
+---
+
+## Introducción: La Metamorfosis Computacional
+
+::: {.columns}
+::: {.column width="60%"}
+La medicina es, en esencia, una disciplina de procesamiento de información. 
+
+Históricamente, la informática médica ha sido rígida. La irrupción de los <abbr title="Large Language Models (Grandes Modelos de Lenguaje)">LLMs</abbr> marca un cambio ontológico: el tránsito de la **discriminación** a la **generación** [@LFAM_ref2026generative].
+
+> A diferencia de los <abbr title="Clinical Decision Support Systems (Sistemas de Soporte a la Decisión Clínica)">CDSS</abbr> tradicionales ("si glucosa > 126 → diabetes"), los <abbr title="Large Language Models">LLMs</abbr> navegan la ambigüedad semántica.
+:::
+
+::: {.column width="40%"}
+![](images/figura1.png){.absolute top=100 right=0 width=750}
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Gancho:** "¿Qué tienen en común un análisis de sangre y una historia clínica?" Ambos son datos. La medicina es, en el fondo, procesar información para reducir incertidumbre.
+*   **Concepto Clave:**
+    *   Hasta ahora, la computación era rígida ("Si X, entonces Y").
+    *   La **IA Generativa** (LLMs) marca un cambio histórico: pasamos de *clasificar* datos a *generar* nuevo conocimiento.
+*   **Analogía Rápida:**
+    *   Antes: Un bibliotecario que te dice en qué pasillo está el libro.
+    *   Ahora: Un bibliotecario que ha leído todos los libros y te escribe un resumen personalizado.
+:::
+
+## El Cambio de Paradigma
+
+Comprender la distinción entre <abbr title="Artificial Intelligence (Inteligencia Artificial)">IA</abbr> discriminativa y generativa es crucial.
+
+::: {.columns}
+::: {.column width="50%"}
+### <abbr title="Machine Learning (Aprendizaje Automático)">ML</abbr> Discriminativo
+*El Patólogo*
+
+* **Objetivo:** Modelar $P(Y|X)$.
+* **Acción:** Clasificar y separar.
+* **Pregunta:** "¿Es benigno o maligno?"
+* **Algoritmos:** <abbr title="Support Vector Machines">SVM</abbr>, XGBoost, Regresión Logística.
+* **Limitación:** "Aplana" la realidad a variables finitas.
+:::
+
+::: {.column width="50%"}
+### <abbr title="Generative Artificial Intelligence">GenAI</abbr> (Generativa)
+*El Cirujano Reconstructivo*
+
+* **Objetivo:** Modelar $P(X, Y)$ (Distribución conjunta).
+* **Acción:** Sintetizar y crear.
+* **Pregunta:** "¿Cómo recrear una estructura coherente?"
+* **Algoritmos:** Transformers, <abbr title="Large Language Models">LLMs</abbr>.
+* **Ventaja:** Maneja datos no estructurados (80% de la data en salud) [@LFAM_ghaffarzadehesfahani2025large].
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   Esta es la distinción más importante de la clase.
+*   **Discriminativa (El Patólogo):**
+    *   Mira una biopsia y dice "Cáncer" o "No Cáncer".
+    *   Separa, clasifica. Es binaria.
+*   **Generativa (El Cirujano Plástico):**
+    *   No solo dice "hay un defecto".
+    *   Reconstruye tejido. *Crea* algo nuevo que debe ser coherente con la anatomía (sintaxis) y funcional (semántica).
+*   **Por qué importa:** El 80% de los datos médicos son notas, voz, texto desordenado. La IA discriminativa no podía usar eso; la Generativa sí.
+:::
+
+## Comparativa Estructural
+
+| Dimensión | <abbr title="Inteligencia Artificial">IA</abbr> Discriminativa | <abbr title="Inteligencia Artificial Generativa">IA</abbr> Generativa |
+|---|---|---|
+| **Función Matemática** | $P(Y \| X)$ (Probabilidad condicional) | $P(X, Y)$ (Distribución conjunta) |
+| **Arquitectura** | Árboles, <abbr title="Convolutional Neural Networks">CNNs</abbr> | Transformers (GPT, Med-PaLM) |
+| **Dato Óptimo** | Estructurado / Tabular | No Estructurado (Texto, Audio) |
+| **Manejo de Ambigüedad** | Bajo (Requiere limpieza) | Alto (Infiere contexto) |
+| **Riesgo Crítico** | Sobreajuste (Overfitting) | Alucinación (Confabulación) |
+
+: {.striped .hover}
+
+## {auto-animate=true}
+
+::: {.columns}
+::: {.column width="60%"}
+### La Paradoja de Moravec en Medicina
+> "Lo que es fácil para un humano (sentido común, empatía) es difícil para la IA, y viceversa."
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Paradoja de Moravec:**
+    *   A la IA le cuesta horrores entender el "sentido común" o la empatía (cosas fáciles para un humano).
+    *   Pero puede memorizar millones de papers y detectar patrones estadísticos invisibles (cosas imposibles para un humano).
+*   **Mensaje:** No es Hombre vs Máquina. Es una colaboración donde cada uno cubre las debilidades del otro.
+:::
+
+## Anatomía Técnica I: Tokenización
+
+La tokenización es la descomposición del lenguaje en unidades numéricas. En medicina, el vocabulario es complejo y aglutinante.
+
+### El Estándar: <abbr title="Byte-Pair Encoding">BPE</abbr>
+El algoritmo **Byte-Pair Encoding** fusiona caracteres frecuentes para formar subpalabras.
+
+::: {.callout-note appearance="simple"}
+#### Desafío Clínico: Fragmentación Semántica
+Término: **"Miocarditis"**
+
+1.  **Ideal (Semántico):** `[mio, card, itis]` (músculo, corazón, inflamación).
+2.  **Realidad (General):** `[my, o, car, di, tis]` (sílabas sin sentido médico).
+
+**Consecuencia:** El modelo gasta recursos re-ensamblando significado [@LFAM_zhu2024medtpe].
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **¿Cómo lee la máquina?** No lee letras, lee números.
+*   **Tokenización:** Es como diseccionar una palabra.
+    *   *Mio-card-itis* (Músculo + Corazón + Inflamación). Esto tiene sentido biológico.
+    *   Los modelos generales a veces cortan mal: *My-o-car-di-tis*.
+*   **Impacto:** Si la máquina corta mal la palabra, "no entiende" la raíz latina y le cuesta más aprender medicina.
+:::
+
+## Anatomía Técnica II: Atención
+
+Si la tokenización es la boca, la **Atención** es el cerebro. Permite procesar dependencias a larga distancia, superando a las <abbr title="Redes Neuronales Recurrentes">RNNs</abbr>.
+
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+$$
+
+* **Query (Q):** Token actual (ej. "prescribir").
+* **Key (K):** Tokens históricos (ej. "alergia", "penicilina").
+* **Value (V):** Información recuperada.
+
+> El mecanismo filtra el ruido administrativo de las notas clínicas, manteniendo una alta relación Señal-Ruido (<abbr title="Signal-to-Noise Ratio">SNR</abbr>) [@LFAM_vaswani2017attention].
+
+::: {.notes}
+**Para el Orador:**
+
+*   **La Atención lo es todo.** Es el "cerebro" del sistema.
+*   Imaginen leer una historia clínica de 500 páginas.
+    *   Ustedes "prestan atención" solo a lo importante: *Alergia a Penicilina* hace 10 años.
+    *   Ignoran el "paciente refiere buen apetito" de hace 5 años.
+*   Los Transformers hacen esto matemáticamente: Calculan qué palabras del pasado son relevantes para la palabra actual.
+:::
+
+## Anatomía Técnica III: Temperatura
+
+El control estocástico de la "creatividad" clínica.
+
+::: {.columns}
+::: {.column width="50%"}
+### Temperatura Baja ($T \to 0$)
+* **Modo:** Determinista, conservador.
+* **Analogía:** *El Cirujano en quirófano*.
+* **Uso:** Extracción <abbr title="Clasificación Internacional de Enfermedades - 10ª revisión">CIE-10</abbr>, codificación, hechos estrictos.
+:::
+
+::: {.column width="50%"}
+### Temperatura Alta ($T > 1$)
+* **Modo:** Creativo, diverso.
+* **Analogía:** *El Internista en brainstorming*.
+* **Uso:** Simulación de pacientes, explicaciones empáticas.
+* **Riesgo:** Confabulaciones.
+:::
+:::
+
+Estudios recientes sugieren estabilidad en el rendimiento incluso con $T$ variable en modelos robustos [@LFAM_patel2024exploring].
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Temperatura = Creatividad Estocástica.**
+*   **Temp Baja (Quirófano):** Queremos precisión milimétrica. Cero improvisación. Ideal para codificar diagnósticos (CIE-10).
+*   **Temp Alta (Brainstorming):** Queremos ideas locas. "¿Podría ser Lupus?". Ideal para simular pacientes o buscar diagnósticos raros ("cebras").
+*   **Peligro:** Si subes mucho la temperatura, la IA empieza a... *alucinar* (inventar cosas).
+:::
+
+## Evolución del <abbr title="Natural Language Processing (Procesamiento de Lenguaje Natural)">NLP</abbr> Médico
+
+### 1. Era "Bag-of-Words" (BoW)
+Contaba palabras ignorando el orden.
+* **Fallo Fatal:** La Negación.
+* *Texto:* "Paciente niega dolor torácico".
+* *BoW:* Detecta "dolor" + "torácico" $\to$ Clasifica como infarto (Falso Positivo).
+
+### 2. Embeddings y <abbr title="Redes Neuronales Recurrentes">RNNs</abbr>
+Word2Vec y <abbr title="Long Short-Term Memory">LSTM</abbr>. Capturaban semántica local pero fallaban en contextos largos.
+
+### 3. Revolución Transformer
+Modelos como BERT y ClinicalBERT entienden el contexto bidireccional, resolviendo la negación correctamente [@LFAM_alsentzer2019publicly].
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Historia Rápida:**
+    *   **Bag-of-Words (La Bolsa):** Tirábamos todas las palabras en un saco y las contábamos.
+    *   **El Error Fatal:** "NO tiene cáncer" vs "Tiene cáncer". Para la bolsa, ambas tienen la palabra "cáncer". Falsos positivos por doquier.
+*   **Revolución Transformer:** Entiende el *orden*. Sabe que el "NO" delante de "cáncer" cambia todo el significado.
+:::
+
+## La Paradoja de los Datos Estructurados
+
+Los <abbr title="Large Language Models">LLMs</abbr> no son nativamente superiores en datos tabulares numéricos.
+
+::: {.columns}
+::: {.column width="50%"}
+**Gradient Boosting (XGBoost)**
+* Cortes precisos (Edad < 65).
+* Superior en predicción de mortalidad tabular.
+* F1-score COVID-19: **0.87** [@LFAM_ghaffarzadehesfahani2025large].
+:::
+
+::: {.column width="50%"}
+**<abbr title="Large Language Models">LLMs</abbr> (GPT-4 / Llama)**
+* Tokenizan números (pierden magnitud).
+* F1-score COVID-19 (Zero-shot): **0.43**.
+* Requieren **Serialización**.
+:::
+:::
+
+### Estrategia de Serialización (Linealización)
+Transformar tablas en narrativa:
+> "Paciente Juan, 38.5°C, FC 110" $\to$ "Juan presenta fiebre y taquicardia..."
+
+Esto restaura el contexto semántico para el LLM.
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Sorpresa:** GPT-4 es *peor* que una calculadora Excel para tablas de números.
+*   ¿Por qué? Porque tokeniza los números. Para él, "100" y "1000" son solo sílabas diferentes, pierde la noción de magnitud.
+*   **Solución (Serialización):** Convertimos la tabla en una historia: "La glucosa es de 180". Al convertirlo en lenguaje, el LLM recupera su superpoder.
+:::
+
+## Arquitecturas Híbridas y <abbr title="Retrieval-Augmented Generation">RAG</abbr>
+
+El futuro no es elegir, es integrar.
+
+### 1. LLM como Extractor de Características
+Notas clínicas $\to$ LLM $\to$ Variables estructuradas (ej. "vive solo") $\to$ XGBoost $\to$ Predicción.
+
+```{mermaid}
+flowchart LR
+    A[Notas Clínicas] --> B(LLM Extractor)
+    B --> C[Variables Estructuradas]
+    D[Datos Tabulares] --> E{XGBoost}
+    C --> E
+    E --> F[Predicción Final]
+    style B fill:#38bdf8,stroke:#fff,color:#000
+    style E fill:#38bdf8,stroke:#fff,color:#000
+```
+
+### 2. <abbr title="Retrieval-Augmented Generation">RAG</abbr> sobre Datos Estructurados
+Conectar el LLM a la <abbr title="Electronic Health Record (Historia Clínica Electrónica)">EHR</abbr> mediante <abbr title="Structured Query Language">SQL</abbr> o <abbr title="Fast Healthcare Interoperability Resources">FHIR</abbr>.
+
+::: {.r-stack}
+```{mermaid}
+sequenceDiagram
+    participant User as Médico
+    participant Sys as Sistema RAG
+    participant EHR as EHR (SQL/FHIR)
+    participant LLM as Modelo
+    
+    User->>Sys: Pregunta Clínica
+    Sys->>EHR: Consulta SQL Estructurada
+    EHR-->>Sys: Datos Crudos (JSON)
+    Sys->>LLM: Prompt (Contexto + Datos)
+    LLM-->>User: Respuesta Narrativa Fundamentada
+```
+:::
+
+Permite respuestas fundamentadas: *"La creatinina subió de 0.9 a 1.5 en el último semestre"* [@ACASRF_miao2025improving].
+
+::: {.notes}
+**Para el Orador:**
+
+*   **El Equipo Híbrido:**
+    *   Usamos **XGBoost** (tablas) para predecir riesgo numérico (Mortalidad 85%).
+    *   Usamos **LLM** (texto) para leer las notas de enfermería.
+*   **RAG (Retrieval Augmented Generation):**
+    *   El LLM no responde de memoria.
+    *   Se conecta a la Historia Clínica (EHR), lee los últimos datos y te responde con la verdad "fresca".
+:::
+
+
+
+## Aplicaciones Clínicas Tangibles
+
+::: {.columns}
+::: {.column width="33%"}
+### Notas <abbr title="Subjetivo, Objetivo, Análisis, Plan">SOAP</abbr>
+Automatización de documentación.
+* Filtra charla trivial.
+* Sintetiza hallazgos.
+* Propone plan basado en guías.
+* **Impacto:** Reduce *burnout*.
+:::
+
+::: {.column width="33%"}
+### Resumen de Alta
+Condensación de hospitalizaciones complejas.
+* Atención de larga distancia para identificar hitos (Ingreso $\to$ <abbr title="Unidad de Cuidados Intensivos">UCI</abbr> $\to$ Alta).
+* Lenguaje accesible para el paciente.
+:::
+
+::: {.column width="33%"}
+### Escriba Digital
+Análisis en tiempo real.
+* Uso de <abbr title="Automatic Speech Recognition">ASR</abbr> + LLM.
+* Detecta matices: "Supongo que tomaré la pastilla..." $\to$ Alerta de baja adherencia.
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Esto ya existe hoy en hospitales.**
+*   **SOAP Automático:** Escucha la consulta y redacta la nota. El médico solo edita y firma.
+*   **Resumen de Alta:** Condensa 3 meses de UCI en 1 página legible. Salva vidas evitando errores de comunicación al alta.
+*   **Escriba Digital:** Detecta si el paciente duda ("hmm, no sé si tomaré eso..."). Alerta al médico sobre falta de adherencia.
+:::
+
+## Conclusiones
+
+::: {.columns}
+::: {.column width="70%"}
+1.  **Complementariedad:** Ecosistema híbrido (LLMs para semántica + XGBoost para tablas).
+2.  **Especialización:** Necesidad de tokenizadores médicos (MedTPE) y preentrenamiento específico.
+3.  **Seguridad:** "Human-in-the-loop" y *Sanity Checks* para mitigar alucinaciones.
+
+> Los <abbr title="Large Language Models">LLMs</abbr> son prótesis intelectuales que pueden devolver al médico el tiempo para la conexión humana [@LFAM_tortora2024beyond].
+:::
+
+::: {.column width="30%"}
+::: {.callout-note}
+### Referencias Clave
+* @LFAM_vaswani2017attention
+* @LFAM_ghaffarzadehesfahani2025large
+* @LFAM_patel2024exploring
+:::
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Mensaje Final:**
+    *   La IA no viene a reemplazar al médico. Viene a quitarle la burocracia.
+    *   Si la IA hace el "papeleo", ustedes pueden volver a mirar al paciente a los ojos.
+    *   Esa es la promesa: **Humanizar la medicina a través de la tecnología.**
+:::
+
+## Bibliografía {.scrollable}
+
+::: {#refs}
+:::

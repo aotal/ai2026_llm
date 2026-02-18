@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<script src="LLM_Fundamentals_Architecture_Medicine_files/libs/clipboard/clipboard.min.js"></script>
+<script src="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-html/tabby.min.js"></script>
+<script src="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-html/popper.min.js"></script>
+<script src="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.24">
+
+  <meta name="author" content="Dr.&nbsp;Generativo">
+  <title>Fundamentos y Arquitectura de LLMs en Medicina</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/dist/theme/quarto-14adb296593e900c1226b4b132c50491.css">
+  <link href="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-diagram/mermaid.min.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-diagram/mermaid-init.js"></script>
+  <link href="LLM_Fundamentals_Architecture_Medicine_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
+</head>
+<body class="quarto-dark">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Fundamentos y Arquitectura de LLMs en Medicina</h1>
+  <p class="subtitle">De la Tokenización al Razonamiento Clínico</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr.&nbsp;Generativo 
+</div>
+        <p class="quarto-title-affiliation">
+            Hospital Universitario Virtual
+          </p>
+    </div>
+</div>
+
+  <p class="date">16 febrero, 2026</p>
+</section>
+<section id="introducción-la-metamorfosis-computacional" class="slide level2">
+<h2>Introducción: La Metamorfosis Computacional</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p>La medicina es, en esencia, una disciplina de procesamiento de información.</p>
+<p>Históricamente, la informática médica ha sido rígida. La irrupción de los <abbr title="Large Language Models (Grandes Modelos de Lenguaje)">LLMs</abbr> marca un cambio ontológico: el tránsito de la <strong>discriminación</strong> a la <strong>generación</strong><span class="citation" data-cites="LFAM_ref2026generative"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">1</a></sup></span>.</p>
+<blockquote>
+<p>A diferencia de los <abbr title="Clinical Decision Support Systems (Sistemas de Soporte a la Decisión Clínica)">CDSS</abbr> tradicionales (“si glucosa &gt; 126 → diabetes”), los <abbr title="Large Language Models">LLMs</abbr> navegan la ambigüedad semántica.</p>
+</blockquote>
+</div><div class="column" style="width:40%;">
+<p><img data-src="images/figura1.png" class="absolute" style="top: 100px; right: 0px; width: 750px; "></p>
+</div></div>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>Gancho:</strong> “¿Qué tienen en común un análisis de sangre y una historia clínica?” Ambos son datos. La medicina es, en el fondo, procesar información para reducir incertidumbre.</li>
+<li><strong>Concepto Clave:</strong>
+<ul>
+<li>Hasta ahora, la computación era rígida (“Si X, entonces Y”).</li>
+<li>La <strong>IA Generativa</strong> (LLMs) marca un cambio histórico: pasamos de <em>clasificar</em> datos a <em>generar</em> nuevo conocimiento.</li>
+</ul></li>
+<li><strong>Analogía Rápida:</strong>
+<ul>
+<li>Antes: Un bibliotecario que te dice en qué pasillo está el libro.</li>
+<li>Ahora: Un bibliotecario que ha leído todos los libros y te escribe un resumen personalizado.</li>
+</ul></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="el-cambio-de-paradigma" class="slide level2">
+<h2>El Cambio de Paradigma</h2>
+<p>Comprender la distinción entre <abbr title="Artificial Intelligence (Inteligencia Artificial)">IA</abbr> discriminativa y generativa es crucial.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="ml-discriminativo"><abbr title="Machine Learning (Aprendizaje Automático)">ML</abbr> Discriminativo</h3>
+<p><em>El Patólogo</em></p>
+<ul>
+<li><strong>Objetivo:</strong> Modelar <span class="math inline">\(P(Y|X)\)</span>.</li>
+<li><strong>Acción:</strong> Clasificar y separar.</li>
+<li><strong>Pregunta:</strong> “¿Es benigno o maligno?”</li>
+<li><strong>Algoritmos:</strong> <abbr title="Support Vector Machines">SVM</abbr>, XGBoost, Regresión Logística.</li>
+<li><strong>Limitación:</strong> “Aplana” la realidad a variables finitas.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="genai-generativa"><abbr title="Generative Artificial Intelligence">GenAI</abbr> (Generativa)</h3>
+<p><em>El Cirujano Reconstructivo</em></p>
+<ul>
+<li><strong>Objetivo:</strong> Modelar <span class="math inline">\(P(X, Y)\)</span> (Distribución conjunta).</li>
+<li><strong>Acción:</strong> Sintetizar y crear.</li>
+<li><strong>Pregunta:</strong> “¿Cómo recrear una estructura coherente?”</li>
+<li><strong>Algoritmos:</strong> Transformers, <abbr title="Large Language Models">LLMs</abbr>.</li>
+<li><strong>Ventaja:</strong> Maneja datos no estructurados (80% de la data en salud)<span class="citation" data-cites="LFAM_ghaffarzadehesfahani2025large"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">2</a></sup></span>.</li>
+</ul>
+</div></div>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li>Esta es la distinción más importante de la clase.</li>
+<li><strong>Discriminativa (El Patólogo):</strong>
+<ul>
+<li>Mira una biopsia y dice “Cáncer” o “No Cáncer”.</li>
+<li>Separa, clasifica. Es binaria.</li>
+</ul></li>
+<li><strong>Generativa (El Cirujano Plástico):</strong>
+<ul>
+<li>No solo dice “hay un defecto”.</li>
+<li>Reconstruye tejido. <em>Crea</em> algo nuevo que debe ser coherente con la anatomía (sintaxis) y funcional (semántica).</li>
+</ul></li>
+<li><strong>Por qué importa:</strong> El 80% de los datos médicos son notas, voz, texto desordenado. La IA discriminativa no podía usar eso; la Generativa sí.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="comparativa-estructural" class="slide level2">
+<h2>Comparativa Estructural</h2>
+<table class="table-striped table-hover caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dimensión</th>
+<th><abbr title="Inteligencia Artificial">IA</abbr> Discriminativa</th>
+<th><abbr title="Inteligencia Artificial Generativa">IA</abbr> Generativa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Función Matemática</strong></td>
+<td><span class="math inline">\(P(Y \| X)\)</span> (Probabilidad condicional)</td>
+<td><span class="math inline">\(P(X, Y)\)</span> (Distribución conjunta)</td>
+</tr>
+<tr class="even">
+<td><strong>Arquitectura</strong></td>
+<td>Árboles, <abbr title="Convolutional Neural Networks">CNNs</abbr></td>
+<td>Transformers (GPT, Med-PaLM)</td>
+</tr>
+<tr class="odd">
+<td><strong>Dato Óptimo</strong></td>
+<td>Estructurado / Tabular</td>
+<td>No Estructurado (Texto, Audio)</td>
+</tr>
+<tr class="even">
+<td><strong>Manejo de Ambigüedad</strong></td>
+<td>Bajo (Requiere limpieza)</td>
+<td>Alto (Infiere contexto)</td>
+</tr>
+<tr class="odd">
+<td><strong>Riesgo Crítico</strong></td>
+<td>Sobreajuste (Overfitting)</td>
+<td>Alucinación (Confabulación)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="section" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<h3 id="la-paradoja-de-moravec-en-medicina">La Paradoja de Moravec en Medicina</h3>
+<blockquote>
+<p>“Lo que es fácil para un humano (sentido común, empatía) es difícil para la IA, y viceversa.”</p>
+</blockquote>
+</div></div>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>Paradoja de Moravec:</strong>
+<ul>
+<li>A la IA le cuesta horrores entender el “sentido común” o la empatía (cosas fáciles para un humano).</li>
+<li>Pero puede memorizar millones de papers y detectar patrones estadísticos invisibles (cosas imposibles para un humano).</li>
+</ul></li>
+<li><strong>Mensaje:</strong> No es Hombre vs Máquina. Es una colaboración donde cada uno cubre las debilidades del otro.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="anatomía-técnica-i-tokenización" class="slide level2">
+<h2>Anatomía Técnica I: Tokenización</h2>
+<p>La tokenización es la descomposición del lenguaje en unidades numéricas. En medicina, el vocabulario es complejo y aglutinante.</p>
+<h3 id="el-estándar-bpe">El Estándar: <abbr title="Byte-Pair Encoding">BPE</abbr></h3>
+<p>El algoritmo <strong>Byte-Pair Encoding</strong> fusiona caracteres frecuentes para formar subpalabras.</p>
+<div class="callout callout-note callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Desafío Clínico: Fragmentación Semántica</strong></p>
+</div>
+<div class="callout-content">
+<p>Término: <strong>“Miocarditis”</strong></p>
+<ol type="1">
+<li><strong>Ideal (Semántico):</strong> <code>[mio, card, itis]</code> (músculo, corazón, inflamación).</li>
+<li><strong>Realidad (General):</strong> <code>[my, o, car, di, tis]</code> (sílabas sin sentido médico).</li>
+</ol>
+<p><strong>Consecuencia:</strong> El modelo gasta recursos re-ensamblando significado<span class="citation" data-cites="LFAM_zhu2024medtpe"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">3</a></sup></span>.</p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>¿Cómo lee la máquina?</strong> No lee letras, lee números.</li>
+<li><strong>Tokenización:</strong> Es como diseccionar una palabra.
+<ul>
+<li><em>Mio-card-itis</em> (Músculo + Corazón + Inflamación). Esto tiene sentido biológico.</li>
+<li>Los modelos generales a veces cortan mal: <em>My-o-car-di-tis</em>.</li>
+</ul></li>
+<li><strong>Impacto:</strong> Si la máquina corta mal la palabra, “no entiende” la raíz latina y le cuesta más aprender medicina.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="anatomía-técnica-ii-atención" class="slide level2">
+<h2>Anatomía Técnica II: Atención</h2>
+<p>Si la tokenización es la boca, la <strong>Atención</strong> es el cerebro. Permite procesar dependencias a larga distancia, superando a las <abbr title="Redes Neuronales Recurrentes">RNNs</abbr>.</p>
+<p><span class="math display">\[
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\]</span></p>
+<ul>
+<li><strong>Query (Q):</strong> Token actual (ej. “prescribir”).</li>
+<li><strong>Key (K):</strong> Tokens históricos (ej. “alergia”, “penicilina”).</li>
+<li><strong>Value (V):</strong> Información recuperada.</li>
+</ul>
+<blockquote>
+<p>El mecanismo filtra el ruido administrativo de las notas clínicas, manteniendo una alta relación Señal-Ruido (<abbr title="Signal-to-Noise Ratio">SNR</abbr>)<span class="citation" data-cites="LFAM_vaswani2017attention"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">4</a></sup></span>.</p>
+</blockquote>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>La Atención lo es todo.</strong> Es el “cerebro” del sistema.</li>
+<li>Imaginen leer una historia clínica de 500 páginas.
+<ul>
+<li>Ustedes “prestan atención” solo a lo importante: <em>Alergia a Penicilina</em> hace 10 años.</li>
+<li>Ignoran el “paciente refiere buen apetito” de hace 5 años.</li>
+</ul></li>
+<li>Los Transformers hacen esto matemáticamente: Calculan qué palabras del pasado son relevantes para la palabra actual.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="anatomía-técnica-iii-temperatura" class="slide level2">
+<h2>Anatomía Técnica III: Temperatura</h2>
+<p>El control estocástico de la “creatividad” clínica.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="temperatura-baja-t-to-0">Temperatura Baja (<span class="math inline">\(T \to 0\)</span>)</h3>
+<ul>
+<li><strong>Modo:</strong> Determinista, conservador.</li>
+<li><strong>Analogía:</strong> <em>El Cirujano en quirófano</em>.</li>
+<li><strong>Uso:</strong> Extracción <abbr title="Clasificación Internacional de Enfermedades - 10ª revisión">CIE-10</abbr>, codificación, hechos estrictos.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="temperatura-alta-t-1">Temperatura Alta (<span class="math inline">\(T &gt; 1\)</span>)</h3>
+<ul>
+<li><strong>Modo:</strong> Creativo, diverso.</li>
+<li><strong>Analogía:</strong> <em>El Internista en brainstorming</em>.</li>
+<li><strong>Uso:</strong> Simulación de pacientes, explicaciones empáticas.</li>
+<li><strong>Riesgo:</strong> Confabulaciones.</li>
+</ul>
+</div></div>
+<p>Estudios recientes sugieren estabilidad en el rendimiento incluso con <span class="math inline">\(T\)</span> variable en modelos robustos<span class="citation" data-cites="LFAM_patel2024exploring"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">5</a></sup></span>.</p>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>Temperatura = Creatividad Estocástica.</strong></li>
+<li><strong>Temp Baja (Quirófano):</strong> Queremos precisión milimétrica. Cero improvisación. Ideal para codificar diagnósticos (CIE-10).</li>
+<li><strong>Temp Alta (Brainstorming):</strong> Queremos ideas locas. “¿Podría ser Lupus?”. Ideal para simular pacientes o buscar diagnósticos raros (“cebras”).</li>
+<li><strong>Peligro:</strong> Si subes mucho la temperatura, la IA empieza a… <em>alucinar</em> (inventar cosas).</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="evolución-del-nlp-médico" class="slide level2">
+<h2>Evolución del <abbr title="Natural Language Processing (Procesamiento de Lenguaje Natural)">NLP</abbr> Médico</h2>
+<h3 id="era-bag-of-words-bow">1. Era “Bag-of-Words” (BoW)</h3>
+<p>Contaba palabras ignorando el orden. * <strong>Fallo Fatal:</strong> La Negación. * <em>Texto:</em> “Paciente niega dolor torácico”. * <em>BoW:</em> Detecta “dolor” + “torácico” <span class="math inline">\(\to\)</span> Clasifica como infarto (Falso Positivo).</p>
+<h3 id="embeddings-y-rnns">2. Embeddings y <abbr title="Redes Neuronales Recurrentes">RNNs</abbr></h3>
+<p>Word2Vec y <abbr title="Long Short-Term Memory">LSTM</abbr>. Capturaban semántica local pero fallaban en contextos largos.</p>
+<h3 id="revolución-transformer">3. Revolución Transformer</h3>
+<p>Modelos como BERT y ClinicalBERT entienden el contexto bidireccional, resolviendo la negación correctamente<span class="citation" data-cites="LFAM_alsentzer2019publicly"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">6</a></sup></span>.</p>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>Historia Rápida:</strong>
+<ul>
+<li><strong>Bag-of-Words (La Bolsa):</strong> Tirábamos todas las palabras en un saco y las contábamos.</li>
+<li><strong>El Error Fatal:</strong> “NO tiene cáncer” vs “Tiene cáncer”. Para la bolsa, ambas tienen la palabra “cáncer”. Falsos positivos por doquier.</li>
+</ul></li>
+<li><strong>Revolución Transformer:</strong> Entiende el <em>orden</em>. Sabe que el “NO” delante de “cáncer” cambia todo el significado.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="la-paradoja-de-los-datos-estructurados" class="slide level2">
+<h2>La Paradoja de los Datos Estructurados</h2>
+<p>Los <abbr title="Large Language Models">LLMs</abbr> no son nativamente superiores en datos tabulares numéricos.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Gradient Boosting (XGBoost)</strong> * Cortes precisos (Edad &lt; 65). * Superior en predicción de mortalidad tabular. * F1-score COVID-19: <strong>0.87</strong><span class="citation" data-cites="LFAM_ghaffarzadehesfahani2025large"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">2</a></sup></span>.</p>
+</div><div class="column" style="width:50%;">
+<p><strong><abbr title="Large Language Models">LLMs</abbr> (GPT-4 / Llama)</strong> * Tokenizan números (pierden magnitud). * F1-score COVID-19 (Zero-shot): <strong>0.43</strong>. * Requieren <strong>Serialización</strong>.</p>
+</div></div>
+<h3 id="estrategia-de-serialización-linealización">Estrategia de Serialización (Linealización)</h3>
+<p>Transformar tablas en narrativa: &gt; “Paciente Juan, 38.5°C, FC 110” <span class="math inline">\(\to\)</span> “Juan presenta fiebre y taquicardia…”</p>
+<p>Esto restaura el contexto semántico para el LLM.</p>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>Sorpresa:</strong> GPT-4 es <em>peor</em> que una calculadora Excel para tablas de números.</li>
+<li>¿Por qué? Porque tokeniza los números. Para él, “100” y “1000” son solo sílabas diferentes, pierde la noción de magnitud.</li>
+<li><strong>Solución (Serialización):</strong> Convertimos la tabla en una historia: “La glucosa es de 180”. Al convertirlo en lenguaje, el LLM recupera su superpoder.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="arquitecturas-híbridas-y-rag" class="slide level2">
+<h2>Arquitecturas Híbridas y <abbr title="Retrieval-Augmented Generation">RAG</abbr></h2>
+<p>El futuro no es elegir, es integrar.</p>
+<h3 id="llm-como-extractor-de-características">1. LLM como Extractor de Características</h3>
+<p>Notas clínicas <span class="math inline">\(\to\)</span> LLM <span class="math inline">\(\to\)</span> Variables estructuradas (ej. “vive solo”) <span class="math inline">\(\to\)</span> XGBoost <span class="math inline">\(\to\)</span> Predicción.</p>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[Notas Clínicas] --&gt; B(LLM Extractor)
+    B --&gt; C[Variables Estructuradas]
+    D[Datos Tabulares] --&gt; E{XGBoost}
+    C --&gt; E
+    E --&gt; F[Predicción Final]
+    style B fill:#38bdf8,stroke:#fff,color:#000
+    style E fill:#38bdf8,stroke:#fff,color:#000
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<h3 id="rag-sobre-datos-estructurados">2. <abbr title="Retrieval-Augmented Generation">RAG</abbr> sobre Datos Estructurados</h3>
+<p>Conectar el LLM a la <abbr title="Electronic Health Record (Historia Clínica Electrónica)">EHR</abbr> mediante <abbr title="Structured Query Language">SQL</abbr> o <abbr title="Fast Healthcare Interoperability Resources">FHIR</abbr>.</p>
+<div class="r-stack">
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant User as Médico
+    participant Sys as Sistema RAG
+    participant EHR as EHR (SQL/FHIR)
+    participant LLM as Modelo
+    
+    User-&gt;&gt;Sys: Pregunta Clínica
+    Sys-&gt;&gt;EHR: Consulta SQL Estructurada
+    EHR--&gt;&gt;Sys: Datos Crudos (JSON)
+    Sys-&gt;&gt;LLM: Prompt (Contexto + Datos)
+    LLM--&gt;&gt;User: Respuesta Narrativa Fundamentada
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
+<p>Permite respuestas fundamentadas: <em>“La creatinina subió de 0.9 a 1.5 en el último semestre”</em><span class="citation" data-cites="ACASRF_miao2025improving"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">7</a></sup></span>.</p>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>El Equipo Híbrido:</strong>
+<ul>
+<li>Usamos <strong>XGBoost</strong> (tablas) para predecir riesgo numérico (Mortalidad 85%).</li>
+<li>Usamos <strong>LLM</strong> (texto) para leer las notas de enfermería.</li>
+</ul></li>
+<li><strong>RAG (Retrieval Augmented Generation):</strong>
+<ul>
+<li>El LLM no responde de memoria.</li>
+<li>Se conecta a la Historia Clínica (EHR), lee los últimos datos y te responde con la verdad “fresca”.</li>
+</ul></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="aplicaciones-clínicas-tangibles" class="slide level2">
+<h2>Aplicaciones Clínicas Tangibles</h2>
+<div class="columns">
+<div class="column" style="width:33%;">
+<h3 id="notas-soap">Notas <abbr title="Subjetivo, Objetivo, Análisis, Plan">SOAP</abbr></h3>
+<p>Automatización de documentación. * Filtra charla trivial. * Sintetiza hallazgos. * Propone plan basado en guías. * <strong>Impacto:</strong> Reduce <em>burnout</em>.</p>
+</div><div class="column" style="width:33%;">
+<h3 id="resumen-de-alta">Resumen de Alta</h3>
+<p>Condensación de hospitalizaciones complejas. * Atención de larga distancia para identificar hitos (Ingreso <span class="math inline">\(\to\)</span> <abbr title="Unidad de Cuidados Intensivos">UCI</abbr> <span class="math inline">\(\to\)</span> Alta). * Lenguaje accesible para el paciente.</p>
+</div><div class="column" style="width:33%;">
+<h3 id="escriba-digital">Escriba Digital</h3>
+<p>Análisis en tiempo real. * Uso de <abbr title="Automatic Speech Recognition">ASR</abbr> + LLM. * Detecta matices: “Supongo que tomaré la pastilla…” <span class="math inline">\(\to\)</span> Alerta de baja adherencia.</p>
+</div></div>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>Esto ya existe hoy en hospitales.</strong></li>
+<li><strong>SOAP Automático:</strong> Escucha la consulta y redacta la nota. El médico solo edita y firma.</li>
+<li><strong>Resumen de Alta:</strong> Condensa 3 meses de UCI en 1 página legible. Salva vidas evitando errores de comunicación al alta.</li>
+<li><strong>Escriba Digital:</strong> Detecta si el paciente duda (“hmm, no sé si tomaré eso…”). Alerta al médico sobre falta de adherencia.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="conclusiones" class="slide level2">
+<h2>Conclusiones</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<ol type="1">
+<li><strong>Complementariedad:</strong> Ecosistema híbrido (LLMs para semántica + XGBoost para tablas).</li>
+<li><strong>Especialización:</strong> Necesidad de tokenizadores médicos (MedTPE) y preentrenamiento específico.</li>
+<li><strong>Seguridad:</strong> “Human-in-the-loop” y <em>Sanity Checks</em> para mitigar alucinaciones.</li>
+</ol>
+<blockquote>
+<p>Los <abbr title="Large Language Models">LLMs</abbr> son prótesis intelectuales que pueden devolver al médico el tiempo para la conexión humana<span class="citation" data-cites="LFAM_tortora2024beyond"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">8</a></sup></span>.</p>
+</blockquote>
+</div><div class="column" style="width:30%;">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Referencias Clave</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="citation" data-cites="LFAM_vaswani2017attention"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">4</a></sup></span></li>
+<li><span class="citation" data-cites="LFAM_ghaffarzadehesfahani2025large"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">2</a></sup></span></li>
+<li><span class="citation" data-cites="LFAM_patel2024exploring"><sup><a href="#/bibliografía" role="doc-biblioref" onclick="">5</a></sup></span></li>
+</ul>
+</div>
+</div>
+</div>
+</div></div>
+<aside class="notes">
+<p><strong>Para el Orador:</strong></p>
+<ul>
+<li><strong>Mensaje Final:</strong>
+<ul>
+<li>La IA no viene a reemplazar al médico. Viene a quitarle la burocracia.</li>
+<li>Si la IA hace el “papeleo”, ustedes pueden volver a mirar al paciente a los ojos.</li>
+<li>Esa es la promesa: <strong>Humanizar la medicina a través de la tecnología.</strong></li>
+</ul></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="bibliografía" class="slide level2 scrollable smaller">
+<h2>Bibliografía</h2>
+<div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-LFAM_ref2026generative" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Unknown. Generative or Discriminative? Revisiting Text Classification in the Era of Transformers. <em>Indexed Source</em>. Advance online publication 2026. <a href="https://arxiv.org/html/2506.12181v1">https://arxiv.org/html/2506.12181v1</a></div>
+</div>
+<div id="ref-LFAM_ghaffarzadehesfahani2025large" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Ghaffarzadeh-Esfahani. Large language models versus classical machine learning performance in COVID-19 mortality prediction using high-dimensional tabular data. <em>Scientific Reports</em>. Advance online publication 2025. doi:<a href="https://doi.org/10.1038/s41598-025-26705-7">10.1038/s41598-025-26705-7</a></div>
+</div>
+<div id="ref-LFAM_zhu2024medtpe" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Mingcheng Zhu, Zhiyao Luo, Yu Liu, Tingting Zhu. MedTPE: Compressing Long EHR Sequence for LLM-based Clinical Prediction with Token-Pair Encoding. <em>KDD Workshop on Mining and Learning from Time Series</em>. Advance online publication 2024.</div>
+</div>
+<div id="ref-LFAM_vaswani2017attention" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, Illia Polosukhin. Attention is all you need. En: <em>Advances in neural information processing systems</em>. Vol 30. 2017.</div>
+</div>
+<div id="ref-LFAM_patel2024exploring" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Dhavalkumar Patel, Prem Timsina, Ganesh Raut, R Freeman, M A Levin, G N Nadkarni, B S Glicksberg, Eyal Klang. Exploring Temperature Effects on Large Language Models Across Various Clinical Tasks. <em>medRxiv</em>. Advance online publication 2024. doi:<a href="https://doi.org/10.1101/2024.06.27.24309623">10.1101/2024.06.27.24309623</a></div>
+</div>
+<div id="ref-LFAM_alsentzer2019publicly" class="csl-entry" role="listitem">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Emily Alsentzer, John R Murphy, Willie Boag, Wei-Hung Weng, Di Jin, Tristan Naumann, Matthew B A McDermott. Publicly Available Clinical BERT Embeddings. <em>arXiv preprint arXiv:190403323</em>. Advance online publication 2019.</div>
+</div>
+<div id="ref-ACASRF_miao2025improving" class="csl-entry" role="listitem">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Miao. Improving Large Language Model Applications in the Medical and Nursing Domains With Retrieval-Augmented Generation: Scoping Review. <em>Journal of Medical Internet Research</em>. Advance online publication 2025. doi:<a href="https://doi.org/10.2196/80557">10.2196/80557</a></div>
+</div>
+<div id="ref-LFAM_tortora2024beyond" class="csl-entry" role="listitem">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Tortora. Beyond Discrimination: Generative AI Applications and Ethical Challenges in Forensic Psychiatry. <em>Frontiers in Psychiatry</em>. Advance online publication 2024. doi:<a href="https://doi.org/10.3389/fpsyt.2024.1346059">10.3389/fpsyt.2024.1346059</a></div>
+</div>
+</div>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="LLM_Fundamentals_Architecture_Medicine_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+
+        height: 1080,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 5.0e-2,
+
+        // Bounds for smallest/largest possible scale to apply to content
+        minScale: 0.2,
+
+        maxScale: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copiado");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copiado");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

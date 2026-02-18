@@ -1,0 +1,430 @@
+---
+title: "Ingeniería de Prompts Avanzada y Arquitecturas Transformer en Medicina"
+subtitle: "Anatomía, Fisiología y Protocolos de Interacción"
+bibliography: references.bib
+format:
+  revealjs:
+    # Geometría y Escala (1080p Nativo)
+    width: 1920
+    height: 1080
+    margin: 0.08
+    min-scale: 0.2
+    max-scale: 2.0
+    
+    # Navegación y UX
+    controls: true
+    progress: true
+    history: true
+    hash: true
+    center: false
+    navigation-mode: linear
+    
+    # Estética y Código
+    theme: [default, Advanced_Prompt_Engineering_Transformer_Architectures.scss]
+    code-line-numbers: true
+    slide-number: c/t
+    highlight-style: dracula
+    
+    # Interactividad
+    chalkboard: true
+    link-citations: true 
+    citations-hover: true
+    lang: es
+---
+
+## Introducción: La Nueva Sintaxis {.auto-animate}
+
+::: {.columns}
+::: {.column width="60%"}
+La medicina contemporánea transita de sistemas pasivos a activos.
+
+* **El Cambio:** De [EHR]{title="Electronic Health Record - Registro Médico Electrónico"} estáticos a Inteligencia Artificial Generativa.
+* **El Objetivo:** Módulo 2 no es instrucción técnica, es "fisiología" de los [LLM]{title="Large Language Models - Grandes Modelos de Lenguaje"}.
+* **El Núcleo:** La arquitectura **Transformer** (*Attention Is All You Need*).
+
+> "Simula, y en ocasiones supera, la capacidad humana para detectar patrones en datos masivos." [@APETA_wang2020ehr2vec]
+:::
+
+::: {.column width="40%"}
+![Espacio Vectorial Semántico: Visualización de la proximidad entre conceptos médicos.](images/fig-vector-space.png){#fig-vector-space}
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Mensaje Principal:** La "Ingeniería de Prompts" suena a código, pero en realidad es **Semiología**.
+*   Es el arte de preguntarle a la máquina de la forma correcta para obtener la respuesta correcta.
+*   Igual que no le hablas igual a un paciente geriátrico que a un cirujano, no le hablas igual a un modelo pequeño que a uno grande.
+:::
+
+## Anatomía del Transformer: Atención vs. Secuencia {.auto-animate}
+
+::: {.columns}
+::: {.column width="45%"}
+### El Pasado: [RNN]{title="Recurrent Neural Networks - Redes Neuronales Recurrentes"}
+* Procesamiento secuencial (palabra por palabra).
+* **Fallo Clínico:** Problema del gradiente desvanecido.
+* *Analogía:* Médico fatigado que olvida la página 1 al llegar a la 50.
+:::
+
+::: {.column width="10%"}
+:::
+
+::: {.column width="45%"}
+### El Presente: Transformer
+* Procesamiento paralelo.
+* **Mecanismo:** Atención Global.
+* *Analogía:* Extender toda la historia clínica sobre una mesa inmensa.
+
+::: {.callout-note appearance="simple"}
+Permite correlacionar un síntoma actual con una alergia remota instantáneamente.
+:::
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **RNN (El Médico Cansado):**
+    *   Lee palabra por palabra.
+    *   Cuando llega al final de la nota, ya olvidó el principio.
+    *   *Problema:* No conecta "Alergia" (línea 1) con "Recetar Penicilina" (línea 100).
+*   **Transformer (El Dios):**
+    *   Ve **TODA** la historia clínica a la vez (paralelismo).
+    *   Puede conectar el síntoma de hoy con el antecedente de hace 10 años instantáneamente.
+:::
+
+## Auto-Atención (Self-Attention): La Gran Sesión Clínica
+
+La matemática explicada mediante una **Sesión Clínica de Gran Pase de Visita**.
+Cada palabra (token) genera tres vectores:
+
+::: {.fragment .fade-up}
+### 1. Query (Q) - La Interconsulta
+Representa la *necesidad* de información.
+> Token "Dolor Torácico" pregunta: *"¿Alguien tiene info sobre isquemia o infarto?"*
+:::
+
+::: {.fragment .fade-up}
+### 2. Key (K) - La Especialidad
+La etiqueta que identifica el contenido.
+> Token "Troponina Elevada" responde: *"Soy un marcador de daño miocárdico".*
+:::
+
+::: {.fragment .fade-up}
+### 3. Value (V) - El Informe
+Si $Q$ y $K$ coinciden (alta afinidad), el contenido ($V$) se transfiere.
+:::
+
+::: {.fragment}
+**Resultado:** "Dolor Torácico" absorbe "Troponina" $\rightarrow$ Recontextualización a **"Angina de Alto Riesgo"**.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **La Sesión Clínica:**
+    *   Cada palabra es un médico en una mesa redonda.
+    *   **Query (Consulta):** "Dolor Torácico" pregunta: "¿Alguien sabe algo de esto?"
+    *   **Key (Clave):** "Troponina" levanta la mano: "Yo sé de daño cardíaco".
+    *   **Value (Valor):** Se pasan la información.
+*   **Resultado:** El "Dolor Torácico" ya no es genérico, ahora está "teñido" de urgencia cardíaca.
+:::
+
+## Multi-Head Attention: El Comité de Tumores {.scrollable}
+
+Un solo cabezal es insuficiente. Usamos múltiples cabezales para simular un [MDT]{title="Multidisciplinary Team - Equipo Multidisciplinar"}.
+
+```{mermaid}
+graph TD
+    subgraph "Mesa Redonda (Paciente)"
+    A[Historia Clínica] --> H1(Oncólogo)
+    A --> H2(Cardiólogo)
+    A --> H3(Farmacólogo)
+    A --> H4(Lingüista)
+    end
+    
+    H1 -->|Nódulo + Tabaquismo| C[Concatenación]
+    H2 -->|Disnea + FEVI| C
+    H3 -->|Quimio + Previos| C
+    H4 -->|Negación Identificada| C
+    
+    C --> D[Diagnóstico Unificado]
+    style A fill:#38bdf8,color:#000
+    style D fill:#38bdf8,color:#000
+```
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Multi-Head = Comité de Tumores.**
+*   Un solo médico no basta. Necesitamos varios especialistas mirando al paciente a la vez.
+*   **Cabezal 1 (Oncólogo):** Mira el nódulo.
+*   **Cabezal 2 (Cardiólogo):** Mira la fracción de eyección.
+*   **Cabezal 3 (Farmacéutico):** Mira las interacciones de drogas.
+*   El Transformer hace esto en paralelo con cientos de "cabezales".
+:::
+
+## Multi-Head Attention: Roles Clínicos
+
+| Cabezal (Rol) | Enfoque Clínico | Conexión Identificada |
+|---|---|---|
+| **Cabezal 1 (Oncólogo)** | Patología Tumoral | "Nódulo pulmonar" $\leftrightarrow$ "Tabaquismo" |
+| **Cabezal 2 (Cardiólogo)** | Hemodinámica | "Disnea" $\leftrightarrow$ "FEVI reducida" |
+| **Cabezal 3 (Farmacólogo)**| Interacciones | Quimioterapia $\leftrightarrow$ Medicación previa |
+| **Cabezal 4 (Lingüista)** | Sintaxis | Manejo de negaciones ("No tiene fiebre") |
+
+: Análisis paralelo de la historia clínica {.striped}
+
+## Componentes Estructurales
+
+::: {.columns}
+::: {.column width="48%"}
+### Codificación Posicional
+* El Transformer no tiene sentido temporal intrínseco.
+* Se inyectan vectores (**Timestamps**).
+* **Crucial:** Distinguir *"Infarto $\rightarrow$ Aspirina"* (Correcto) de *"Aspirina $\rightarrow$ Infarto"* (Fallo).
+:::
+
+::: {.column width="48%"}
+### Encoder vs. Decoder
+
+**Encoder (El Diagnóstico - ej. BERT)**
+* Mira todo el contexto (bidireccional).
+* Ideal para clasificación [ICD-10]{title="International Classification of Diseases - 10th Revision"}.
+
+**Decoder (El Tratamiento - ej. GPT)**
+* Autoregresivo (Genera token a token).
+* Ideal para redactar informes de alta.
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Encoder (Patólogo):**
+    *   Mira todo y clasifica. "¿Es cáncer o no?".
+    *   Uso: Leer notas y sacar códigos CIE-10.
+*   **Decoder (Terapeuta):**
+    *   Genera texto nuevo hacia adelante.
+    *   Uso: Escribir el informe de alta o hablar con el paciente.
+:::
+
+## Ingeniería de Prompts: La Evidencia (2024-2025)
+
+No es magia, es alinear algoritmos.
+
+::: {.columns}
+::: {.column width="50%"}
+### Zero-Shot (Sin ejemplos)
+* **Riesgo:** Alta variabilidad.
+* Modelos pequeños (Mistral) muestran concordancia pobre o desacuerdos ($Kappa < 0$) en extracción de datos complejos [@APETA_corso2025combining].
+* *Uso:* Tareas triviales.
+:::
+
+::: {.column width="50%"}
+### Few-Shot (Aprendizaje en Contexto)
+* **Estrategia:** Dar 2-5 ejemplos `Input -> Output`.
+* **Evidencia:** Con [LLaMa]{title="Large Language Model Meta AI"} 3.1, elevó la concordancia a niveles casi humanos ($Kappa \approx 0.6–0.7$, $p=0.0049$) [@ACASRFShao2025Scalable].
+* *Uso:* Diagnóstico y estructuración.
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Zero-Shot (Sin estudio):** "Haz un diagnóstico".
+    *   Peligroso. El modelo divaga.
+*   **Few-Shot (Mira, Simula, Haz):**
+    *   "Mira este ejemplo de cómo diagnostico una neumonía."
+    *   "Mira este otro de una apendicitis."
+    *   "Ahora haz tú este caso nuevo."
+    *   **Resultado:** La precisión sube drásticamente. En medicina, *siempre* dad ejemplos.
+:::
+
+## La Paradoja del Chain-of-Thought (CoT)
+
+::: {.callout-warning}
+### Alerta: El Problema del Ruido Clínico
+El **86.3%** de los modelos sufren **degradación de rendimiento** al usar CoT ("piensa paso a paso") en notas clínicas reales [@ACASRFWu2025Why].
+:::
+
+* **Causa:** Las notas clínicas son ruidosas y fragmentadas.
+* **Efecto:** El modelo "razona" sobre ruido irrelevante y alucina conexiones.
+
+### La Solución: Two-Step Prompting
+Estrategia "Summarize-then-Diagnose" (60.6% vs 56.5% precisión [@ACASRFSonoda2024Structured]).
+
+1.  **Paso 1 (Secretario):** Extraer y limpiar datos (Síntomas pivote, Labs).
+2.  **Paso 2 (Clínico):** Razonar SOLO sobre el resumen limpio.
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Paradoja:** Decirle "piensa paso a paso" (Chain of Thought) a veces *empeora* las cosas en medicina.
+*   **¿Por qué?** Porque las notas médicas tienen mucha "basura" (ruido). Si el modelo piensa demasiado sobre el ruido, se confunde.
+*   **Solución (Secretario -> Médico):**
+    1.  Primero: "Límpiame los datos" (Secretario).
+    2.  Segundo: "Diagnostica con los datos limpios" (Médico).
+:::
+
+## Ejemplo Práctico: Prompt de Diagnóstico Diferencial
+
+Este prompt implementa la estrategia de dos pasos para reducir alucinaciones.
+
+```markdown
+# ROL: Especialista en Medicina Interna
+
+# INPUT: [Historia Clínica Ruidosa]
+
+# FASE 1: SÍNTESIS (El Secretario)
+Genera un resumen estructurado que contenga SOLAMENTE:
+* Síntomas Pivote.
+* Datos Objetivos Anormales (Signos vitales, Labs).
+* Cronología.
+* NOTA: NO diagnostiques aquí.
+
+# FASE 2: RAZONAMIENTO (El Experto)
+Usando EXCLUSIVAMENTE el resumen de la Fase 1:
+1. Genera 3 diagnósticos diferenciales principales.
+2. Para cada uno aporta: Argumentos a favor, en contra y Probabilidad Pre-test.
+
+```
+
+## Ejemplo Práctico: Prompt de Alta (Few-Shot)
+
+Uso de ejemplos para controlar el estilo de salida.
+
+```markdown
+Transforma notas de evolución en Resumen de Alta.
+
+EJEMPLO 1:
+Input: "Fiebre y tos. Rx consolidación. Amoxi ok. A casa."
+Output: Dx: Neumonía NAC. Evolución: Respuesta a Amoxicilina 1g/8h. Afebril 48h.
+
+EJEMPLO 2:
+Input: "Dolor FID. Eco apendicitis. Qx bien."
+Output: Dx: Apendicitis Aguda. Evolución: Apendicectomía laparoscópica sin incidencias.
+
+TAREA ACTUAL:
+Input: [Notas del paciente actual...]
+Output: 
+
+```
+
+## Arquitecturas Avanzadas: Más allá del Texto
+
+::: {.columns}
+::: {.column width="50%"}
+
+### [ViT]{title="Vision Transformers"} en Patología
+
+* Divide la imagen ([WSI]{title="Whole Slide Image - Imagen de Lámina Completa"}) en parches.
+* Calcula atención global: conecta "Atipia nuclear" con "Invasión estromal" distante.
+* Supera a las [CNN]{title="Convolutional Neural Networks - Redes Neuronales Convolucionales"} en contexto global [@ACASRFTaslim2025GNNViTCap].
+:::
+
+::: {.column width="50%"}
+
+### Nested Tool Calling (MeNTi)
+
+Los LLM fallan en matemáticas. Solución: Arquitectura **MeNTi** [@ACASRFZhu2024MeNTi].
+
+1. **Orquestador:** Detecta necesidad de cálculo.
+2. **Sub-Tool:** Script Python convierte unidades (mmol/L  mg/dL).
+3. **Main-Tool:** Calculadora de riesgo recibe datos limpios.
+
+```{mermaid}
+sequenceDiagram
+    participant LLM as Orquestador (Cerebro)
+    participant Py as Script Python
+    participant Calc as Calculadora Riesgo
+    
+    LLM->>LLM: Detecta necesidad de cálculo
+    LLM->>Py: Convertir mmol/L a mg/dL
+    Py-->>LLM: Valor Exacto (Numérico)
+    LLM->>Calc: Input Datos Limpios
+    Calc-->>LLM: Score de Riesgo
+```
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **No pidáis a ChatGPT que calcule dosis.**
+    *   Es malo en matemáticas. Puede decirte que 1 gramo es menor que 500 miligramos.
+*   **Solución (Uso de Herramientas):**
+    *   El LLM no calcula. El LLM *llama* a una calculadora (Python) y te da el resultado.
+    *   Es como un médico usando una app de dosis en lugar de calcular mentalmente.
+:::
+
+## Retrieval-Augmented Generation (RAG)
+
+Combate la obsolescencia y la alucinación.
+
+* **Problema:** El modelo no conoce papers publicados ayer.
+* **Mecanismo:**
+1. Búsqueda semántica en base de datos fiable (PubMed, Guías).
+2. Inyección de documentos recuperados en el contexto.
+
+
+* **Prompt de Anclaje:** *"Responde utilizando SOLAMENTE la información proporcionada..."*
+
+::: {.notes}
+**Para el Orador:**
+
+*   **RAG = Examen a Libro Abierto.**
+*   El modelo no sabe qué salió en PubMed ayer. Su memoria está congelada en 2023.
+*   Con RAG, le damos acceso a la biblioteca en tiempo real.
+*   "No me respondas de memoria, busca en esta guía clínica y dime qué dice".
+:::
+
+## Riesgos Críticos y Ética
+
+::: {.columns}
+::: {.column width="45%"}
+
+### Alucinaciones y Sesgo
+
+* **Sesgo de Automatización:** Aceptación acrítica de la IA por su tono autoritario.
+* La detección de alucinaciones sigue siendo un desafío; el razonamiento general es clave para la auto-corrección.
+:::
+
+::: {.column width="10%"}
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Sesgo de Automatización:**
+    *   La IA suena muy segura de sí misma.
+    *   Peligro: El médico "apaga" su cerebro crítico y asume que la máquina tiene razón.
+    *   *Recordad:* La IA puede alucinar con total confianza. Ustedes son el filtro de seguridad.
+:::
+
+::: {.column width="45%"}
+
+### Seguridad: Data Poisoning
+
+* **Amenaza:** Ataques adversarios en entornos críticos ([UCI]{title="Unidad de Cuidados Intensivos"}).
+* **Mecanismo:** Manipulación sutil de datos de entrenamiento para sesgar triajes [@ACASRFAlber2025Medical].
+* Requiere auditoría constante de prompts.
+:::
+:::
+
+## Conclusión: La Simbiosis
+
+* La arquitectura **Transformer** permite procesar la complejidad biológica en paralelo.
+* La potencia bruta requiere **Ingeniería de Prompts** basada en evidencia (Few-Shot, Two-Step).
+* El futuro no es el reemplazo, es la integración de:
+* **Atención Masiva** (Máquina)
+* **Juicio Ético** (Humano)
+
+
+
+### Referencias Bibliográficas
+
+::: {#refs}
+:::

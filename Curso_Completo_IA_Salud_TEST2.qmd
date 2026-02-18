@@ -1,0 +1,736 @@
+---
+title: "Inteligencia Artificial Generativa en Medicina (TEST 2)"
+author: "Antonio Otal"
+format:
+  revealjs:
+    embed-resources: true
+    theme: [default, Curso_Completo_IA_Salud.scss]
+    width: 1920
+    height: 1080
+    margin: 0.05
+    min-scale: 1.0
+    max-scale: 1.0
+    transition: slide
+    background-transition: fade
+    controls: true
+    progress: true
+    center: false
+    slide-number: c/t
+    show-slide-number: all
+    menu: true
+    chalkboard: false
+    overview: true
+    code-line-numbers: true
+    citations-hover: true
+    link-external-newwindow: true
+bibliography: references.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+lang: es
+---
+
+
+# Módulo 3: Sistemas Clínicos Avanzados {background-color="#0f172a"}
+
+## Introducción Ejecutiva {auto-animate=true}
+
+::: {.columns}
+::: {.column width="60%"}
+### El Cambio de Paradigma
+
+> La implementación de <abbr title="Large Language Models - Grandes Modelos de Lenguaje">LLMs</abbr> es comparable a la transición del papel a la <abbr title="Historia Clínica Electrónica">HCE</abbr>.
+
+Sin embargo, el rendimiento "out-of-the-box" es insuficiente para el entorno clínico:
+
+* **Conocimiento congelado:** No saben qué guía clínica salió ayer.
+* **Alucinaciones:** Inventan hechos plausibles pero falsos.
+* **Falta de especialización:** Confunden protocolos sutiles.
+:::
+
+::: {.column width="40%"}
+::: {.callout-important title="Riesgo Clínico"}
+Un modelo generalista puede escribir un poema perfecto, pero fallar estrepitosamente al diferenciar un protocolo de tratamiento histórico de uno actual.
+:::
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Problema Real:** GPT-4 es un "sabelotodo" congelado en el tiempo.
+    *   No sabe que ayer salió una nueva guía de sepsis.
+    *   Si no sabe, inventa (alucina).
+*   **Riesgo:** Un modelo que recita poesía perfecta pero prescribe un antibiótico retirado del mercado hace un mes.
+:::
+
+## La Solución de Ingeniería
+
+No basta con "preguntar" al modelo. Necesitamos arquitecturas de soporte.
+
+::: {.columns}
+::: {.column width="33%"}
+### 1. <abbr title="Retrieval-Augmented Generation">RAG</abbr>
+**"Examen a Libro Abierto"**
+
+Soluciona la memoria estática y la falta de fuentes.
+
+
+:::
+
+::: {.column width="33%"}
+### 2. Fine-Tuning
+**"La Residencia Médica"**
+
+Soluciona la falta de "jerga" y comportamiento especializado.
+
+
+:::
+
+::: {.column width="33%"}
+### 3. Knowledge Graphs
+**"Lógica Determinista"**
+
+Soluciona la alucinación mediante hechos verificados (tripletas).
+
+
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   No existe una "bala de plata". Necesitamos tres pilares:
+    1.  **RAG (Memoria):** "Déjame mirar el libro".
+    2.  **Fine-Tuning (Especialización):** "Ya hice la residencia en cardio".
+    3.  **Knowledge Graphs (Lógica):** "A causa B". Sin dudas.
+:::
+
+
+# RAG (Retrieval-Augmented Generation)
+
+## El Concepto: Examen a Libro Abierto
+
+::: {.columns}
+::: {.column width="50%"}
+### El Estudiante (El <abbr title="Large Language Model">LLM</abbr>)
+* Excelente razonamiento lógico.
+* Gramática médica perfecta.
+* **Problema:** Memoria difusa o desactualizada.
+:::
+
+::: {.column width="50%"}
+### El Libro (Base de Datos)
+* Fuente de verdad externa ("Viva").
+* Guías de hospital, Prospectos, <abbr title="Electronic Health Record">EHR</abbr> del paciente.
+* **Ventaja:** Si la guía cambia hoy, la respuesta cambia mañana.
+:::
+:::
+
+::: {.fragment .fade-up}
+> **Proceso:** El modelo no responde de memoria. Busca el capítulo relevante, lee y sintetiza.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **La Analogía Definitiva: Examen a Libro Abierto.**
+*   No le pedimos al médico que memorice todas las dosis de fármacos raros. Le pedimos que sepa dónde buscarlos.
+*   **RAG** hace exactamente eso: Ante una pregunta, el modelo va a la biblioteca (BBDD), lee la guía y te responde.
+*   *Ventaja:* Si cambia la guía hoy, la respuesta cambia mañana. Cero reentrenamiento.
+:::
+
+## Arquitectura Técnica: Embeddings
+
+Los **Embeddings** traducen conceptos clínicos a vectores matemáticos.
+
+::: {.r-stack}
+::: {.fragment .fade-in-then-out}
+**El espacio semántico clásico:**
+$$Rey - Hombre + Mujer \approx Reina$$
+:::
+
+::: {.fragment .fade-in}
+**El espacio semántico clínico (ClinVec):**
+$$\vec{V}_{Dolor\_Torácico} + \vec{V}_{Disnea} \approx \vec{V}_{Infarto\_Miocardio}$$
+
+La similitud del coseno entre síntomas agregados y la enfermedad alcanza **0.66**.
+:::
+:::
+
+::: {.notes}
+Esto demuestra que el modelo "entiende" que estos síntomas son constituyentes de la enfermedad por proximidad geométrica, no por reglas.
+:::
+
+## Flujo de Trabajo RAG Hospitalario
+
+```{mermaid}
+%%| fig-align: center
+graph LR
+    A[Docs Hospital] -->|Chunking| B(Fragmentos)
+    B -->|Embedding Model| C[(Base Vectorial)]
+    D[Query Médico] -->|Embedding| E[Búsqueda Semántica]
+    E -->|Recupera| C
+    C -->|Contexto Relevante| F[LLM Generador]
+    D --> F
+    F -->|Respuesta Citada| G[Salida Clínica]
+    
+    style C fill:#38bdf8,stroke:#fff,color:#000
+    style F fill:#c084fc,stroke:#fff,color:#000
+
+```
+
+* **Ingesta:** Chunking semántico (no cortar tablas de dosis).
+* **Recuperación:** Búsqueda por significado, no solo palabras clave.
+* **Generación:** Prompt "Usa EXCLUSIVAMENTE el contexto proporcionado".
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Flujo Técnico:**
+    1.  **Ingesta:** Leemos los PDFs del hospital.
+    2.  **Búsqueda:** El médico pregunta "¿Dosis de paracetamol?". Buscamos fragmentos relevantes.
+    3.  **Respuesta:** Le damos al modelo los fragmentos y le decimos "Responde SOLO usando esto".
+    *   *Resultado:* Una respuesta citada y verificable.
+:::
+
+![Concepto RAG: Cerebro Estático vs. Cerebro Conectado a Biblioteca Viva.](images/fig-rag-concept.png){#fig-rag-concept}
+
+# Fine-Tuning (Ajuste Fino)
+
+## Analogía: La Residencia Médica
+
+::: {.columns}
+::: {.column width="40%"}
+**Facultad (Pre-entrenamiento)**
+
+* Conocimiento generalista.
+* Sabe biología básica y lenguajes.
+* Carece de "deformación profesional".
+:::
+
+::: {.column width="20%"}
+![](images/figura4.png){width=100% fig-align="center"}
+:::
+
+::: {.column width="40%"}
+**Residencia (Fine-Tuning)**
+
+* Entrenamiento intensivo en dominio (ej. Cardiología).
+* Exposición a miles de casos reales.
+* Aprende el tono, formato y abreviaturas locales.
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Fine-Tuning = La Residencia.**
+*   El modelo base es un estudiante recién graduado. Sabe mucha teoría, pero no sabe redactar una nota de evolución de cardiología.
+*   Lo enviamos a la "Residencia" (entrenamiento con miles de casos de cardio).
+*   Aprenden el *estilo*, la *jerga* y las *prioridades* de la especialidad.
+:::
+
+## El Reto Técnico: Olvido Catastrófico
+
+Entrenar un modelo de 70B parámetros es costoso y arriesgado (puede olvidar conocimientos generales).
+
+### Solución: <abbr title="Low-Rank Adaptation">LoRA</abbr>
+
+En lugar de reescribir el cerebro del modelo, usamos adaptadores eficientes.
+
+## Mecánica de LoRA: "Notas Adhesivas"
+
+::: {.columns}
+::: {.column width="60%"}
+Imagine que el modelo es una enciclopedia **congelada**. No podemos rescribir sus páginas, pero podemos pegar notas en los márgenes.
+
+* **Congelado ($W$):** El modelo base (Llama 3) permanece inmutable.
+* **Entrenable ($A \times B$):** Inyectamos matrices pequeñas que "modulan" la señal.
+* **Ventaja:** Solo entrenamos el **0.1%** de los parámetros.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **El Miedo:** Si reentrenamos el cerebro entero, puede olvidar cómo hablar inglés (Olvido Catastrófico).
+*   **La Solución (LoRA):** No tocamos el cerebro. Pegamos "post-its" (notas adhesivas) encima.
+    *   El modelo base (congelado) sigue ahí.
+    *   Los adaptadores (post-its) le enseñan la nueva tarea.
+    *   *Ventaja:* Barato, rápido y reversible.
+:::
+
+::: {.column width="40%"}
+```{mermaid}
+graph BT
+    subgraph "Cerebro Congelado"
+    W["Pesos Originales (W)"]
+    end
+    subgraph "Nota Adhesiva (LoRA)"
+    A["Matriz A"] --> B["Matriz B"]
+    end
+    In[Input] --> W
+    In --> A
+    W --> Suma(("+"))
+    B --> Suma
+    Suma --> Out[Output]
+    
+    style W fill:#64748b,stroke:#fff,color:#fff
+    style A fill:#fbbf24,color:#000
+    style B fill:#fbbf24,color:#000
+```
+:::
+:::
+
+# Knowledge Graphs (Grafos de Conocimiento)
+
+## Más allá de la Probabilidad
+
+Los vectores son probabilísticos. Los Grafos son **deterministas**.
+
+::: {.columns}
+::: {.column width="50%"}
+**Riesgo Vectorial**
+"Fármaco A **cura** B" y "Fármaco A **causa** B" pueden estar cerca semánticamente.
+:::
+
+::: {.column width="50%"}
+**Lógica de Grafo (Tripletas)**
+`(Furosemida) -> TRATA -> (Insuficiencia Cardíaca)`
+`(Furosemida) -> CAUSA -> (Hipopotasemia)`
+:::
+:::
+
+```{mermaid}
+graph TD
+    A((Furosemida)) -->|TRATA| B((Insuficiencia Cardíaca))
+    A -->|CAUSA| C((Hipopotasemia))
+    D((Aspirina)) -->|INTERACTÚA| E((Warfarina))
+    
+    style A fill:#fbbf24,color:#000
+    style B fill:#fff,color:#000
+    style C fill:#ef4444,color:#fff
+
+```
+
+Los <abbr title="Knowledge Graphs">KGs</abbr> actúan como "Guardarraíles" contra alucinaciones.
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Vectores vs Grafos:**
+    *   El Vector dice: "Aspirina y Sangrado están relacionados". (Probabilidad).
+    *   El Grafo dice: "Aspirina CAUSA Sangrado". (Certeza).
+*   Usar grafos es ponerle "barandillas" de seguridad al modelo para que no alucine relaciones falsas.
+:::
+
+# Estrategia de Implementación
+
+## Matriz de Decisión Clínica
+
+| Característica | <abbr title="Retrieval-Augmented Generation">RAG</abbr> | Fine-Tuning / <abbr title="Low-Rank Adaptation">LoRA</abbr> |
+| --- | --- | --- |
+| **Objetivo** | Precisión de Conocimiento | Adaptación de Comportamiento |
+| **Analogía** | Libro Abierto | Residencia Médica |
+| **Datos** | Alta Volatilidad (Guías, <abbr title="Electronic Health Record">EHR</abbr>) | Baja Volatilidad (Estilo, Jerga) |
+| **Auditoría** | **Alta** (Cita fuentes exactas) | Baja (Caja negra) |
+| **Privacidad** | Excelente (Control de acceso) | Compleja (Datos en pesos) |
+
+: Comparativa Técnica
+
+## Conclusión: El Enfoque Híbrido
+
+El estándar de oro no es elegir, sino combinar.
+
+::: {.r-fit-text}
+"El Médico Inteligente con la Mejor Biblioteca"
+:::
+
+1. **Fine-Tuning:** Para crear un modelo que entienda el lenguaje médico.
+2. **RAG:** Para consultar las guías y datos del paciente en tiempo real.
+3. **GraphRAG:** Para verificar la lógica de las interacciones.
+
+::: {.callout-note title="Mensaje para CIOs"}
+La seguridad del paciente reside en la arquitectura, no solo en el modelo.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Conclusión: El Híbrido.**
+*   Queremos un **Médico Especialista** (Fine-Tuning) que tenga acceso a la **Mejor Biblioteca** (RAG) y siga **Protocolos Estrictos** (Grafos).
+*   Esa es la arquitectura del futuro en salud.
+:::
+
+#
+
+
+# Módulo 5: Ética, Sesgos y Seguridad {background-color="#1f2937"}
+
+# Introducción {background-image="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop" background-opacity="0.3"}
+
+::: {.r-fit-text}
+LA PARADOJA DE LA POTENCIA
+:::
+
+::: {.r-fit-text}
+Y LA FRAGILIDAD
+:::
+
+## El Contexto Actual
+
+::: {.columns}
+
+::: {.column width="60%"}
+La irrupción de la <abbr title="Inteligencia Artificial Generativa">IAG</abbr> es un punto de inflexión histórico comparable a la imagenología diagnóstica.
+
+* **Capacidad:** Sintetiza narrativas clínicas, diagnósticos diferenciales y planes de tratamiento.
+* **Mercado:** Se estiman ingresos de **$18.8 mil millones** para 2027.
+* **Diferencia Clave:** No solo almacena datos, *crea* nuevo contenido con fluidez autoritativa.
+:::
+
+::: {.column width="40%"}
+::: {.callout-important}
+### La Fragilidad Intrínseca
+La naturaleza probabilística de los <abbr title="Large Language Models (Grandes Modelos de Lenguaje)">LLMs</abbr> y <abbr title="Foundation Models (Modelos Fundacionales)">FMs</abbr> implica que no "saben" medicina; simplemente predicen la siguiente palabra más probable.
+:::
+
+> "La fluidez lingüística enmascara la ignorancia fáctica."
+:::
+
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **La Metáfora del Espejo:** La IA no es una entidad alienígena imparcial. Es un espejo de alta definición de todo lo que hemos escrito en internet.
+*   Refleja nuestra sabiduría médica, pero también nuestros prejuicios humanos.
+*   **Paradoja:** Escribe con la autoridad de un catedrático, pero puede cometer errores de un estudiante de primero.
+:::
+
+## Vectores de Riesgo Críticos
+
+La utilidad clínica depende de la gestión de tres vectores principales:
+
+
+
+::: {.notes}
+**Para el Orador:**
+
+*   **El Triángulo del Riesgo:**
+    1.  **Verdad:** ¿Lo que dice es real? (Alucinación).
+    2.  **Justicia:** ¿Trata a todos por igual? (Sesgos).
+    3.  **Responsabilidad:** ¿Quién tiene la culpa si falla? (Ustedes).
+:::
+::: {.fragment .fade-up}
+1.  **Alucinaciones y Confabulaciones:** La patología de la verdad.
+:::
+::: {.fragment .fade-up}
+2.  **Sesgos Algorítmicos:** La perpetuación estructural de la desigualdad.
+:::
+::: {.fragment .fade-up}
+3.  **Responsabilidad y <abbr title="Human-in-the-Loop (Humano en el Bucle)">HITL</abbr>:** El riesgo del sesgo de automatización.
+:::
+
+# Alucinaciones Médicas
+
+## Definición y Fenomenología
+
+::: {.columns}
+::: {.column width="50%"}
+**Definición Operativa:**
+Cualquier instancia donde un modelo genera contenido médico engañoso, fabricado o inconsistente con hechos establecidos [@EBSGAH_aljamaan2024reference].
+
+* No es un "bug" tradicional.
+* Es semánticamente plausible pero factualmente incorrecto.
+* Se presenta con **alta confianza** retórica.
+:::
+
+::: {.column width="50%"}
+::: {.callout-caution title="El Peligro"}
+A diferencia de un error de software que rompe el sistema, la alucinación se integra silenciosamente en el flujo clínico.
+:::
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **No es un Bug, es una Feature.**
+*   El modelo está entrenado para *completar patrones*, no para decir la verdad.
+*   Si le pides un estudio que no existe, te inventará uno con título, autores y DOI perfectos, porque "parece" un estudio real.
+*   **Peligro:** La confianza. Suenan tan seguros que bajamos la guardia.
+:::
+
+## Taxonomía de Alucinaciones
+
+Estudios recientes (2025) clasifican los fallos en dos ramas principales:
+
+```{mermaid}
+%%| fig-align: center
+graph TD
+    A["Alucinaciones Médicas"] --> B("Centradas en Datos")
+    A --> C("Centradas en Razonamiento")
+    
+    B --> B1["Fabricación de Hechos"]
+    B --> B2["Desorden Cronológico"]
+    B --> B3["Conflictos de Entrada"]
+    
+    C --> C1["Falla de Inferencia"]
+    C --> C2["Confabulación Explicativa"]
+    C --> C3["Errores de Cálculo/Dosis"]
+    
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style B fill:#bbf,stroke:#333
+    style C fill:#bbf,stroke:#333
+
+```
+
+## Detalle de Alucinaciones (1/2)
+
+### Centradas en Datos
+
+::: {.fragment}
+
+* **Fabricación de Hechos:** Inventar valores de HbA1c o signos vitales inexistentes.
+:::
+::: {.fragment}
+* **Desorden Cronológico:** Invertir causa-efecto (ej. efecto adverso antes del fármaco).
+:::
+::: {.fragment}
+* **Conflictos de Entrada:** Recomendar penicilina a un paciente con alergia documentada en el prompt.
+:::
+
+### La Epidemia de Citas Falsas
+
+Modelos como ChatGPT 3.5/Bing tienen tendencia a inventar <abbr title="Digital Object Identifier">DOIs</abbr> y referencias bibliográficas completas [@ACASRFMasters2023Medical].
+
+## Detalle de Alucinaciones (2/2)
+
+### Centradas en Razonamiento
+
+Fallos en la lógica inferencial sobre datos correctos:
+
+1. **Diagnósticos "Cebras":** Priorizar diagnósticos extremadamente raros sin justificación.
+2. **Confabulación de Explicaciones:** Inventar fisiopatología para justificar un error.
+3. **Errores de Protocolo:** Regímenes de dosificación letales por fallos aritméticos.
+
+## Estrategias de Mitigación: Grounding
+
+La solución estándar de oro es **<abbr title="Retrieval-Augmented Generation (Generación Aumentada por Recuperación)">RAG</abbr>**.
+
+::: {.columns}
+::: {.column width="60%"}
+
+* **Mecanismo:** Convierte la generación en un problema de búsqueda.
+* **Anclaje:** El modelo se ve obligado a sintetizar respuestas basadas *exclusivamente* en documentos recuperados (Guías, PubMed).
+* **Grafos de Conocimiento:** Integración con SNOMED CT o UMLS para validación lógica (ej. verificar rangos de insulina).
+:::
+
+::: {.column width="40%"}
+**Otras Técnicas:**
+
+* **<abbr title="Chain-of-Thought (Cadena de Pensamiento)">CoT</abbr>:** Desglosar el razonamiento paso a paso.
+* **Citas Verificables:** Enlaces activos (click-through) obligatorios.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Grounding (Anclaje):**
+    *   No dejéis que el modelo vuele libre.
+    *   Atadlo al suelo con **RAG**.
+    *   "No inventes. Usa este libro".
+    *   Es la diferencia entre un cuentacuentos y un bibliotecario.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Teratógeno Digital:**
+    *   Igual que la talidomida causaba malformaciones físicas, los datos sesgados causan malformaciones algorítmicas.
+    *   Si entrenas con datos de 1950, tendrás un "médico" con la mentalidad de 1950 (machista, racista, paternalista).
+    *   El modelo no tiene moral, solo tiene estadística.
+:::
+:::
+
+# Sesgos Algorítmicos
+
+## La Automatización de la Desigualdad
+
+> "Los algoritmos no son jueces neutrales; son espejos de alta definición de las inequidades sociales."
+
+::: {.columns}
+::: {.column width="50%"}
+
+### Mecanismos de Transferencia
+
+El sesgo actúa como un **"Teratógeno Digital"**:
+
+1. **Datos de Entrenamiento:** Sobrerrepresentación de poblaciones europeas (hombres blancos).
+2. **Etiquetado Histórico:** El algoritmo aprende prejuicios médicos pasados (ej. sub-diagnóstico de dolor en mujeres).
+3. **Variables Proxy:** El error más crítico.
+:::
+
+::: {.column width="50%"}
+![Analogía del Teratógeno Digital: El sesgo en los datos deforma el modelo.](images/fig-bias-teratogen.png){#fig-bias-teratogen}
+:::
+:::
+
+## Caso de Estudio: El Algoritmo de Obermeyer
+
+*Referencia: Science, 2019 [@ACASRFObermeyer2019Dissecting]*
+
+**El Problema:** Identificar pacientes de alto riesgo para programas de gestión de cuidados.
+**La Variable Proxy:** Costo Sanitario Futuro ($).
+
+::: {.fragment .fade-in}
+::: {.callout-important}
+
+### El Hallazgo del Sesgo
+
+A igual puntaje de riesgo (igual costo predicho), los **pacientes negros estaban significativamente más enfermos** que los blancos.
+:::
+:::
+
+::: {.fragment .fade-in}
+**La Causa:** Debido al racismo sistémico y barreras de acceso, los pacientes negros generan *menos costo* a igual nivel de enfermedad. El algoritmo predijo "costo", no "salud".
+:::
+
+## Sesgos en Dermatología
+
+Riesgo de seguridad física directa por subrepresentación.
+
+* **Datos:** Escasez de imágenes de piel oscura (Tipos V-VI de Fitzpatrick) [@ACASRFShah2025The].
+* **Consecuencia:** Menor sensibilidad/especificidad en detección de melanomas en pacientes negros.
+* **Impacto Clínico:** Falsos negativos en lesiones malignas, retrasando biopsias salvadoras en poblaciones ya vulnerables.
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Ejemplo Vital: Dermatología.**
+*   Las IAs entrenadas con piel blanca fallan en piel negra.
+*   No es "teoría crítica de la raza", es seguridad del paciente.
+*   Si vuestro algoritmo no funciona en el 30% de vuestros pacientes, es mala medicina.
+:::
+
+# Responsabilidad y Factor Humano
+
+## El Marco Legal y <abbr title="Human-in-the-Loop">HITL</abbr>
+
+::: {.columns}
+::: {.column width="50%"}
+
+### El "Intermediario Aprendido"
+
+Legalmente, el médico sigue siendo el garante final. La IA es considerada una herramienta (<abbr title="Clinical Decision Support System">CDSS</abbr>), análoga a un libro.
+
+**La Trampa de la Responsabilidad:**
+
+* Si sigues a la IA y falla: **Negligencia** (falta de supervisión).
+* Si ignoras a la IA y tenía razón: **Mala praxis** (ignorar estándar de cuidado).
+:::
+
+::: {.column width="50%"}
+
+### El Sesgo de Automatización
+
+El cerebro humano es un "avaro cognitivo".
+Este sesgo actúa como un **sedante de la vigilancia** [@EBSGAH_goddard2011automation].
+
+![Sesgo de Automatización: El médico sedado por la falsa seguridad de la IA.](images/fig-automation-bias.png){#fig-automation-bias}
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Sesgo de Automatización = GPS al Lago.**
+*   Todos hemos seguido el GPS ciegamente.
+*   En medicina, si la máquina dice "Dosis: 100mg", tendemos a apagar el cerebro y obedecer.
+*   **Sois el Cortafuegos:** Ustedes están ahí para decir "No, eso es una locura" cuando la máquina falla.
+:::
+
+## Tipos de Error por Automatización
+
+::: {.panel-tabset}
+
+### Errores de Comisión
+
+El médico sigue una recomendación **incorrecta** de la IA, actuando contra su propio juicio o protocolos.
+
+* *Causa:* Exceso de confianza en la "autoridad" de la máquina.
+* *Datos:* La tasa de error médico aumenta cuando la IA sugiere incorrectamente.
+
+### Errores de Omisión
+
+El médico **falla en notar** un problema porque la IA no lo marcó (Falsos Negativos).
+
+* *Mentalidad:* "Si la máquina no dijo nada, todo está bien".
+* *Exacerbante:* La presión de tiempo y fatiga convierten al médico en un "sello de goma" (rubber stamp) [@ACASRFRosbach2024Automation].
+
+:::
+
+## Mitigación del Sesgo de Automatización
+
+Para reactivar el pensamiento crítico del médico:
+
+1. **Fricción Cognitiva Intencional:**
+* No dar órdenes ("Administrar 50mg").
+* Dar soporte a la decisión ("Patrón compatible con X, revisar criterios A y B").
+
+
+2. **Nudges (Empujones):**
+* Requerir justificación explícita para aceptar recomendaciones de alto riesgo.
+
+
+3. **Entrenamiento en Falibilidad:**
+* Simulaciones donde la IA se equivoca deliberadamente.
+
+
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Fricción Cognitiva:**
+    *   A veces *queremos* que sea difícil aceptar la recomendación de la IA.
+    *   Obligar al médico a escribir "por qué" acepta un riesgo alto.
+    *   Despertar al cerebro del "piloto automático".
+:::
+
+# Conclusión
+
+## Hacia el Médico Aumentado
+
+El futuro no es la sustitución, sino la **simbiosis vigilante**.
+
+::: {.columns}
+::: {.column width="33%"}
+
+### 🤖 La IA
+
+Asume la carga cognitiva repetitiva, documentación y síntesis de datos masivos.
+:::
+
+::: {.column width="33%"}
+
+### 👩‍⚕️ El Médico
+
+Aporta el juicio contextual, ético y la interpretación de matices sociales.
+:::
+
+::: {.column width="33%"}
+
+### 🛡️ La Seguridad
+
+Se basa en la alfabetización algorítmica: saber interrogar a la IA y detectar alucinaciones.
+:::
+:::
+
+> "La prudencia, la verificación y la justicia deben ser los pilares inquebrantables de esta nueva era médica."
+
+#
+
+
+# Bibliografía Global
+
+::: {#refs}
+:::

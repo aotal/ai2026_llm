@@ -1,0 +1,359 @@
+---
+title: "Sistemas Avanzados de IA Clínica"
+subtitle: "RAG, Fine-Tuning y Grafos de Conocimiento"
+author: "Informe Técnico de Ingeniería"
+format:
+  revealjs:
+    width: 1920
+    height: 1080
+    margin: 0.08
+    min-scale: 0.2
+    max-scale: 2.0
+    theme: [default, Advanced_Clinical_AI_Systems_RAG_FineTuning.scss]
+    transition: fade
+    background-transition: fade
+    controls: true
+    progress: true
+    center: false
+    slide-number: c/t
+    chalkboard: true
+    menu: true
+    code-line-numbers: true
+    citations-hover: true
+    lang: es
+bibliography: references.bib
+---
+
+## Introducción Ejecutiva {auto-animate=true}
+
+::: {.columns}
+::: {.column width="60%"}
+### El Cambio de Paradigma
+
+> La implementación de <abbr title="Large Language Models - Grandes Modelos de Lenguaje">LLMs</abbr> es comparable a la transición del papel a la <abbr title="Historia Clínica Electrónica">HCE</abbr>.
+
+Sin embargo, el rendimiento "out-of-the-box" es insuficiente para el entorno clínico:
+
+* **Conocimiento congelado:** No saben qué guía clínica salió ayer.
+* **Alucinaciones:** Inventan hechos plausibles pero falsos.
+* **Falta de especialización:** Confunden protocolos sutiles.
+:::
+
+::: {.column width="40%"}
+::: {.callout-important title="Riesgo Clínico"}
+Un modelo generalista puede escribir un poema perfecto, pero fallar estrepitosamente al diferenciar un protocolo de tratamiento histórico de uno actual.
+:::
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Problema Real:** GPT-4 es un "sabelotodo" congelado en el tiempo.
+    *   No sabe que ayer salió una nueva guía de sepsis.
+    *   Si no sabe, inventa (alucina).
+*   **Riesgo:** Un modelo que recita poesía perfecta pero prescribe un antibiótico retirado del mercado hace un mes.
+:::
+
+## La Solución de Ingeniería
+
+No basta con "preguntar" al modelo. Necesitamos arquitecturas de soporte.
+
+::: {.columns}
+::: {.column width="33%"}
+### 1. <abbr title="Retrieval-Augmented Generation">RAG</abbr>
+**"Examen a Libro Abierto"**
+
+Soluciona la memoria estática y la falta de fuentes.
+
+
+:::
+
+::: {.column width="33%"}
+### 2. Fine-Tuning
+**"La Residencia Médica"**
+
+Soluciona la falta de "jerga" y comportamiento especializado.
+
+
+:::
+
+::: {.column width="33%"}
+### 3. Knowledge Graphs
+**"Lógica Determinista"**
+
+Soluciona la alucinación mediante hechos verificados (tripletas).
+
+
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   No existe una "bala de plata". Necesitamos tres pilares:
+    1.  **RAG (Memoria):** "Déjame mirar el libro".
+    2.  **Fine-Tuning (Especialización):** "Ya hice la residencia en cardio".
+    3.  **Knowledge Graphs (Lógica):** "A causa B". Sin dudas.
+:::
+
+
+# RAG (Retrieval-Augmented Generation)
+
+## El Concepto: Examen a Libro Abierto
+
+::: {.columns}
+::: {.column width="50%"}
+### El Estudiante (El <abbr title="Large Language Model">LLM</abbr>)
+* Excelente razonamiento lógico.
+* Gramática médica perfecta.
+* **Problema:** Memoria difusa o desactualizada.
+:::
+
+::: {.column width="50%"}
+### El Libro (Base de Datos)
+* Fuente de verdad externa ("Viva").
+* Guías de hospital, Prospectos, <abbr title="Electronic Health Record">EHR</abbr> del paciente.
+* **Ventaja:** Si la guía cambia hoy, la respuesta cambia mañana.
+:::
+:::
+
+::: {.fragment .fade-up}
+> **Proceso:** El modelo no responde de memoria. Busca el capítulo relevante, lee y sintetiza.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **La Analogía Definitiva: Examen a Libro Abierto.**
+*   No le pedimos al médico que memorice todas las dosis de fármacos raros. Le pedimos que sepa dónde buscarlos.
+*   **RAG** hace exactamente eso: Ante una pregunta, el modelo va a la biblioteca (BBDD), lee la guía y te responde.
+*   *Ventaja:* Si cambia la guía hoy, la respuesta cambia mañana. Cero reentrenamiento.
+:::
+
+## Arquitectura Técnica: Embeddings
+
+Los **Embeddings** traducen conceptos clínicos a vectores matemáticos.
+
+::: {.r-stack}
+::: {.fragment .fade-in-then-out}
+**El espacio semántico clásico:**
+$$Rey - Hombre + Mujer \approx Reina$$
+:::
+
+::: {.fragment .fade-in}
+**El espacio semántico clínico (ClinVec):**
+$$\vec{V}_{Dolor\_Torácico} + \vec{V}_{Disnea} \approx \vec{V}_{Infarto\_Miocardio}$$
+
+La similitud del coseno entre síntomas agregados y la enfermedad alcanza **0.66**.
+:::
+:::
+
+::: {.notes}
+Esto demuestra que el modelo "entiende" que estos síntomas son constituyentes de la enfermedad por proximidad geométrica, no por reglas.
+:::
+
+## Flujo de Trabajo RAG Hospitalario
+
+```{mermaid}
+%%| fig-align: center
+graph LR
+    A[Docs Hospital] -->|Chunking| B(Fragmentos)
+    B -->|Embedding Model| C[(Base Vectorial)]
+    D[Query Médico] -->|Embedding| E[Búsqueda Semántica]
+    E -->|Recupera| C
+    C -->|Contexto Relevante| F[LLM Generador]
+    D --> F
+    F -->|Respuesta Citada| G[Salida Clínica]
+    
+    style C fill:#38bdf8,stroke:#fff,color:#000
+    style F fill:#c084fc,stroke:#fff,color:#000
+
+```
+
+* **Ingesta:** Chunking semántico (no cortar tablas de dosis).
+* **Recuperación:** Búsqueda por significado, no solo palabras clave.
+* **Generación:** Prompt "Usa EXCLUSIVAMENTE el contexto proporcionado".
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Flujo Técnico:**
+    1.  **Ingesta:** Leemos los PDFs del hospital.
+    2.  **Búsqueda:** El médico pregunta "¿Dosis de paracetamol?". Buscamos fragmentos relevantes.
+    3.  **Respuesta:** Le damos al modelo los fragmentos y le decimos "Responde SOLO usando esto".
+    *   *Resultado:* Una respuesta citada y verificable.
+:::
+
+![Concepto RAG: Cerebro Estático vs. Cerebro Conectado a Biblioteca Viva.](images/fig-rag-concept.png){#fig-rag-concept}
+
+# Fine-Tuning (Ajuste Fino)
+
+## Analogía: La Residencia Médica
+
+::: {.columns}
+::: {.column width="40%"}
+**Facultad (Pre-entrenamiento)**
+
+* Conocimiento generalista.
+* Sabe biología básica y lenguajes.
+* Carece de "deformación profesional".
+:::
+
+::: {.column width="20%"}
+![](images/figura4.png){width=100% fig-align="center"}
+:::
+
+::: {.column width="40%"}
+**Residencia (Fine-Tuning)**
+
+* Entrenamiento intensivo en dominio (ej. Cardiología).
+* Exposición a miles de casos reales.
+* Aprende el tono, formato y abreviaturas locales.
+:::
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Fine-Tuning = La Residencia.**
+*   El modelo base es un estudiante recién graduado. Sabe mucha teoría, pero no sabe redactar una nota de evolución de cardiología.
+*   Lo enviamos a la "Residencia" (entrenamiento con miles de casos de cardio).
+*   Aprenden el *estilo*, la *jerga* y las *prioridades* de la especialidad.
+:::
+
+## El Reto Técnico: Olvido Catastrófico
+
+Entrenar un modelo de 70B parámetros es costoso y arriesgado (puede olvidar conocimientos generales).
+
+### Solución: <abbr title="Low-Rank Adaptation">LoRA</abbr>
+
+En lugar de reescribir el cerebro del modelo, usamos adaptadores eficientes.
+
+## Mecánica de LoRA: "Notas Adhesivas"
+
+::: {.columns}
+::: {.column width="60%"}
+Imagine que el modelo es una enciclopedia **congelada**. No podemos rescribir sus páginas, pero podemos pegar notas en los márgenes.
+
+* **Congelado ($W$):** El modelo base (Llama 3) permanece inmutable.
+* **Entrenable ($A \times B$):** Inyectamos matrices pequeñas que "modulan" la señal.
+* **Ventaja:** Solo entrenamos el **0.1%** de los parámetros.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **El Miedo:** Si reentrenamos el cerebro entero, puede olvidar cómo hablar inglés (Olvido Catastrófico).
+*   **La Solución (LoRA):** No tocamos el cerebro. Pegamos "post-its" (notas adhesivas) encima.
+    *   El modelo base (congelado) sigue ahí.
+    *   Los adaptadores (post-its) le enseñan la nueva tarea.
+    *   *Ventaja:* Barato, rápido y reversible.
+:::
+
+::: {.column width="40%"}
+```{mermaid}
+graph BT
+    subgraph "Cerebro Congelado"
+    W["Pesos Originales (W)"]
+    end
+    subgraph "Nota Adhesiva (LoRA)"
+    A["Matriz A"] --> B["Matriz B"]
+    end
+    In[Input] --> W
+    In --> A
+    W --> Suma(("+"))
+    B --> Suma
+    Suma --> Out[Output]
+    
+    style W fill:#64748b,stroke:#fff,color:#fff
+    style A fill:#fbbf24,color:#000
+    style B fill:#fbbf24,color:#000
+```
+:::
+:::
+
+# Knowledge Graphs (Grafos de Conocimiento)
+
+## Más allá de la Probabilidad
+
+Los vectores son probabilísticos. Los Grafos son **deterministas**.
+
+::: {.columns}
+::: {.column width="50%"}
+**Riesgo Vectorial**
+"Fármaco A **cura** B" y "Fármaco A **causa** B" pueden estar cerca semánticamente.
+:::
+
+::: {.column width="50%"}
+**Lógica de Grafo (Tripletas)**
+`(Furosemida) -> TRATA -> (Insuficiencia Cardíaca)`
+`(Furosemida) -> CAUSA -> (Hipopotasemia)`
+:::
+:::
+
+```{mermaid}
+graph TD
+    A((Furosemida)) -->|TRATA| B((Insuficiencia Cardíaca))
+    A -->|CAUSA| C((Hipopotasemia))
+    D((Aspirina)) -->|INTERACTÚA| E((Warfarina))
+    
+    style A fill:#fbbf24,color:#000
+    style B fill:#fff,color:#000
+    style C fill:#ef4444,color:#fff
+
+```
+
+Los <abbr title="Knowledge Graphs">KGs</abbr> actúan como "Guardarraíles" contra alucinaciones.
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Vectores vs Grafos:**
+    *   El Vector dice: "Aspirina y Sangrado están relacionados". (Probabilidad).
+    *   El Grafo dice: "Aspirina CAUSA Sangrado". (Certeza).
+*   Usar grafos es ponerle "barandillas" de seguridad al modelo para que no alucine relaciones falsas.
+:::
+
+# Estrategia de Implementación
+
+## Matriz de Decisión Clínica
+
+| Característica | <abbr title="Retrieval-Augmented Generation">RAG</abbr> | Fine-Tuning / <abbr title="Low-Rank Adaptation">LoRA</abbr> |
+| --- | --- | --- |
+| **Objetivo** | Precisión de Conocimiento | Adaptación de Comportamiento |
+| **Analogía** | Libro Abierto | Residencia Médica |
+| **Datos** | Alta Volatilidad (Guías, <abbr title="Electronic Health Record">EHR</abbr>) | Baja Volatilidad (Estilo, Jerga) |
+| **Auditoría** | **Alta** (Cita fuentes exactas) | Baja (Caja negra) |
+| **Privacidad** | Excelente (Control de acceso) | Compleja (Datos en pesos) |
+
+: Comparativa Técnica
+
+## Conclusión: El Enfoque Híbrido
+
+El estándar de oro no es elegir, sino combinar.
+
+::: {.r-fit-text}
+"El Médico Inteligente con la Mejor Biblioteca"
+:::
+
+1. **Fine-Tuning:** Para crear un modelo que entienda el lenguaje médico.
+2. **RAG:** Para consultar las guías y datos del paciente en tiempo real.
+3. **GraphRAG:** Para verificar la lógica de las interacciones.
+
+::: {.callout-note title="Mensaje para CIOs"}
+La seguridad del paciente reside en la arquitectura, no solo en el modelo.
+:::
+
+::: {.notes}
+**Para el Orador:**
+
+*   **Conclusión: El Híbrido.**
+*   Queremos un **Médico Especialista** (Fine-Tuning) que tenga acceso a la **Mejor Biblioteca** (RAG) y siga **Protocolos Estrictos** (Grafos).
+*   Esa es la arquitectura del futuro en salud.
+:::
+
+## Referencias
+
+::: {#refs}
+:::

@@ -1,0 +1,42 @@
+---
+title: "Prueba: Sistemas Avanzados y Ética"
+author: "Antonio Otal"
+format:
+  revealjs:
+    embed-resources: true
+    theme: [default, Curso_Completo_IA_Salud.scss]
+    width: 1920
+    height: 1080
+    margin: 0.05
+    min-scale: 0.2
+    max-scale: 2.0
+    transition: slide
+    background-transition: fade
+    controls: true
+    progress: true
+    center: false
+    slide-number: c/t
+    show-slide-number: all
+    menu: true
+    chalkboard: true
+    overview: true
+    code-line-numbers: true
+    citations-hover: true
+    link-external-newwindow: true
+bibliography: references.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+lang: es
+---
+
+# Módulo 3: Sistemas Clínicos Avanzados {background-color="#0f172a"}
+
+{{< include Advanced_Clinical_AI_Systems_RAG_FineTuning.qmd >}}
+
+# Módulo 5: Ética, Sesgos y Seguridad {background-color="#1f2937"}
+
+{{< include Ethics_Bias_Security_Generative_AI_Health.qmd >}}
+
+# Bibliografía Global
+
+::: {#refs}
+:::

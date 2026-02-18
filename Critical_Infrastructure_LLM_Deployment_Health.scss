@@ -1,0 +1,96 @@
+/*-- scss:defaults --*/
+
+// Paleta de Colores "Clinical Engineering"
+$body-bg: #0f172a; // Azul muy oscuro (Slate 900)
+$body-color: #f8fafc; // Blanco hueso (Slate 50)
+$link-color: #38bdf8; // Cyan clínico para enlaces
+$selection-bg: #e11d48; // Rojo de alerta para selección
+
+// Tipografía
+$font-family-sans-serif: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$presentation-heading-font: "JetBrains Mono", "Fira Code", monospace; // Toque ingenieril
+$presentation-heading-color: #f1f5f9;
+$presentation-font-size-root: 40px;
+
+// Ajustes de Reveal.js
+$presentation-h1-font-size: 2.5em;
+$presentation-h2-font-size: 1.6em;
+$presentation-block-margin: 20px;
+
+/*-- scss:rules --*/
+
+// Estilo para las siglas con tooltip
+abbr[title] {
+  text-decoration: underline dotted $link-color;
+  cursor: help;
+  font-weight: bold;
+  color: #bae6fd;
+}
+
+// Cajas de énfasis (Callouts personalizados - Adaptación Nativa)
+.callout {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-left: 5px solid $link-color !important;
+  border-radius: 0 10px 10px 0 !important;
+  margin-bottom: 20px !important;
+
+  .callout-header {
+    background: transparent !important;
+    color: $link-color !important;
+    font-weight: bold;
+    font-family: $presentation-heading-font;
+  }
+
+  .callout-icon {
+    display: none; // Minimalismo ingenieril
+  }
+
+  &.callout-important,
+  &.callout-note {
+    border-left-color: $link-color !important;
+
+    .callout-header {
+      color: $link-color !important;
+    }
+  }
+
+  &.callout-warning,
+  &.callout-caution {
+    border-left-color: #ef4444 !important; // Critical Alert styling
+    background: rgba(239, 68, 68, 0.1) !important;
+
+    .callout-header {
+      color: #ef4444 !important;
+    }
+  }
+}
+
+// Tablas profesionales
+.reveal table {
+  font-size: 0.7em;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.reveal th {
+  background-color: rgba(56, 189, 248, 0.2);
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.reveal td {
+  border-bottom: 1px solid #334155;
+}
+
+// Ajuste de imágenes
+.reveal img {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+// Barra de progreso
+.reveal .progress {
+  height: 5px;
+  color: $link-color;
+}

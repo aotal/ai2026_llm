@@ -1,0 +1,66 @@
+/*-- scss:defaults --*/
+
+// Paleta de colores "Medical Cyberpunk"
+$body-bg: #0f172a; // Azul noche profundo
+$body-color: #f8fafc; // Blanco clínico
+$link-color: #38bdf8; // Cian brillante
+$heading-color: #e2e8f0;
+
+// Tipografía base
+$font-family-sans-serif: 'Inter', system-ui, -apple-system, sans-serif;
+$presentation-font-size-root: 40px;
+$presentation-heading-font-weight: 700;
+
+/*-- scss:rules --*/
+
+// Estilo para siglas con tooltip
+abbr {
+    text-decoration: none;
+    border-bottom: 1px dotted $link-color;
+    cursor: help;
+    color: #7dd3fc;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: #ffffff;
+        border-bottom: 1px solid #ffffff;
+        text-shadow: 0 0 10px $link-color;
+    }
+}
+
+// Títulos con acento inferior
+.reveal h2 {
+    border-bottom: 3px solid $link-color;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+}
+
+// Callouts personalizados (imitando alertas clínicas)
+.callout-box {
+    background: rgba(56, 189, 248, 0.1);
+    border-left: 5px solid $link-color;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 0 10px 10px 0;
+
+    &.warning {
+        background: rgba(239, 68, 68, 0.1);
+        border-left-color: #ef4444;
+    }
+
+    &.tip {
+        background: rgba(34, 197, 94, 0.1);
+        border-left-color: #22c55e;
+    }
+}
+
+// Estilo de citas
+.citation {
+    color: #94a3b8;
+    font-size: 0.6em;
+}
+
+// Ajustes para diagramas Mermaid (fondo oscuro)
+.mermaid {
+    background: transparent !important;
+}

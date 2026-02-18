@@ -1,0 +1,53 @@
+/*-- scss:defaults --*/
+$body-bg: #0f172a; // Slate 900 (Fondo oscuro profundo)
+$body-color: #f1f5f9; // Slate 100 (Texto claro)
+$link-color: #38bdf8; // Sky 400 (Enlaces y acentos)
+$heading-color: #ffffff;
+$presentation-font-size-root: 40px;
+$font-family-sans-serif: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+/*-- scss:rules --*/
+
+// Estilo para títulos de diapositivas
+.reveal .slides h2 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  border-bottom: 3px solid $link-color;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  text-transform: none; // Evitar mayúsculas forzadas
+}
+
+// Estilo para siglas con tooltip (abbr)
+abbr[title] {
+  text-decoration: underline dotted $link-color;
+  cursor: help;
+  color: #c084fc; // Purple 400 para destacar siglas
+  font-weight: 600;
+}
+
+// Cajas de énfasis (Callouts personalizados)
+// Cajas de énfasis (Migrado a callouts nativos de Quarto)
+// .callout-box eliminado para reducir deuda técnica
+
+// Tablas
+.reveal table {
+  font-size: 0.8em;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.reveal table th {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: $link-color;
+}
+
+.reveal table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Ajuste para citas bibliográficas pequeñas
+.reveal .citation {
+  font-size: 0.6em;
+  color: #94a3b8;
+}

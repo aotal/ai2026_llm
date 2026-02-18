@@ -1,0 +1,22 @@
+[
+  {
+    "source_file": "Advanced_Clinical_AI_Systems_RAG_FineTuning.qmd",
+    "prompt": "A conceptual diagram explaining Retrieval-Augmented Generation (RAG). Split screen: Left side shows a 'Static Brain' (LLM) trying to remember facts. Right side shows the same Brain connected via a glowing pipeline to a 'Live Library' (External Database) containing medical textbooks and patient records. The brain on the right is answering a medical question correctly by holding a book from the library. High-tech, clean, medical blue aesthetic.",
+    "image_filename": "fig-rag-concept.png"
+  },
+  {
+    "source_file": "Advanced_Prompt_Engineering_Transformer_Architectures.qmd",
+    "prompt": "A visualization of a high-dimensional semantic vector space. A dark void filled with glowing constellation-like clusters of data points. Each point is a medical concept. A glowing line connects 'Chest Pain' to 'Myocardial Infarction', showing semantic proximity. Cyber-grid background, neon blue and purple colors.",
+    "image_filename": "fig-vector-space.png"
+  },
+  {
+    "source_file": "Ethics_Bias_Security_Generative_AI_Health.qmd",
+    "prompt": "Visual analogy of Bias Transfer as a 'Digital Teratogen'. Left: A beaker labeled 'Training Data' containing a dark, oily liquid (representing bias). Center: This liquid is being poured into a molding machine labeled 'Model Training'. Right: The output robot (Model) comes out deformed/glitching, representing the congenital defect of bias. Dark, serious, warning aesthetic.",
+    "image_filename": "fig-bias-teratogen.png"
+  },
+  {
+    "source_file": "Ethics_Bias_Security_Generative_AI_Health.qmd",
+    "prompt": "Visual metaphor for Automation Bias. A tired doctor in a white coat is dozing off in a comfortable chair labeled 'AI Assurance'. A screen in front of them shows a red warning sign, but they are too sedated to notice. The screen is labeled 'False Negative'. Atmosphere of dangerous complacency. Digital art style.",
+    "image_filename": "fig-automation-bias.png"
+  }
+]

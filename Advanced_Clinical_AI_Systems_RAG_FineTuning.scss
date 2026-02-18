@@ -1,0 +1,122 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+// Paleta de Colores (Medical Dark Mode)
+$body-bg: #0f172a; // Slate 900
+$body-color: #f8fafc; // Slate 50
+$link-color: #38bdf8; // Sky 400
+$selection-bg: #be185d; // Pink 700
+
+// Tipografía
+$font-family-sans-serif: 'Inter', sans-serif;
+$font-family-monospace: 'JetBrains Mono', monospace;
+$presentation-font-size-root: 40px;
+$presentation-h1-font-size: 2.5em;
+$presentation-h2-font-size: 1.6em;
+
+/*-- scss:rules --*/
+
+// Títulos con acento clínico
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.reveal h2 {
+    color: $link-color;
+    border-bottom: 1px solid rgba($link-color, 0.3);
+    padding-bottom: 0.5rem;
+}
+
+// Estilo para Acrónimos (Tooltips)
+abbr {
+    text-decoration: none;
+    border-bottom: 1px dotted #94a3b8;
+    cursor: help;
+    color: #c084fc; // Purple accent for terms
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &:hover {
+        color: #fff;
+        background-color: rgba(192, 132, 252, 0.2);
+        border-radius: 4px;
+        padding: 0 4px;
+    }
+}
+
+// Cajas de Callout personalizadas
+// Cajas de Callout personalizadas (Adaptación a Nativo)
+.callout {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-left: 6px solid $link-color !important;
+    border-radius: 0 8px 8px 0 !important;
+    margin-bottom: 20px !important;
+
+    // Título del callout
+    .callout-header {
+        background: transparent !important;
+        color: $link-color !important;
+        font-weight: 800 !important;
+        font-size: 1.2em;
+    }
+
+    // Icono
+    .callout-icon {
+        display: none; // Ocultar icono por defecto si se prefiere estilo limpio, o estilizar
+    }
+
+    // Variantes
+    &.callout-warning {
+        border-left-color: #fbbf24 !important;
+
+        .callout-header {
+            color: #fbbf24 !important;
+        }
+    }
+
+    &.callout-important,
+    &.callout-danger {
+        // Mapping "danger" to "important"
+        border-left-color: #ef4444 !important;
+
+        .callout-header {
+            color: #ef4444 !important;
+        }
+    }
+
+    &.callout-tip {
+        border-left-color: #22c55e !important;
+
+        .callout-header {
+            color: #22c55e !important;
+        }
+    }
+}
+
+// Tablas matriciales
+.reveal table {
+    font-size: 0.8em;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+
+    th {
+        border-bottom: 2px solid $link-color;
+        font-weight: 600;
+        color: $link-color;
+    }
+
+    td {
+        border-bottom: 1px solid #334155;
+        vertical-align: middle;
+    }
+}
+
+// Ajustes para Mermaid
+.mermaid {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
