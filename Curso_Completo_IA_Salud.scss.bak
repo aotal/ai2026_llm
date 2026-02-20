@@ -1,0 +1,82 @@
+/*-- scss:defaults --*/
+$body-bg: #0f172a; // Slate 900 (Base oscura unificada)
+$body-color: #f1f5f9; // Slate 100
+$link-color: #38bdf8; // Sky 400
+$heading-color: #ffffff;
+$presentation-font-size-root: 40px;
+$font-family-sans-serif: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$code-block-bg: #1e293b; // Slate 800
+
+/*-- scss:rules --*/
+
+// FIX: Force hardware acceleration to prevent blurry text during scaling
+.reveal .slides {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+// Ensure crisp text rendering
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+// Ensure sharp images
+img {
+    image-rendering: high-quality;
+}
+
+// Títulos
+.reveal .slides h2 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    border-bottom: 3px solid $link-color;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    text-transform: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+// Callouts Nativos (Unificación de estilos)
+.callout {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-radius: .25rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+// Tablas
+.reveal table {
+    font-size: 0.8em;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.reveal table th {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: $link-color;
+    font-weight: 600;
+}
+
+.reveal table td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+// Citas
+.reveal .citation {
+    font-size: 0.6em;
+    color: #94a3b8;
+}
+
+// Ajustes específicos para Mermaid en fondo oscuro
+.mermaid {
+    background-color: transparent !important;
+}
+
+// Clases de utilidad para los módulos
+.module-header {
+    text-align: center;
+    margin-top: 20%;
+}

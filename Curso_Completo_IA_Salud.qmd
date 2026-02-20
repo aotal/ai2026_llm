@@ -1,7 +1,11 @@
 ---
 title: "Inteligencia Artificial Generativa en Medicina"
-subtitle: "Curso Completo: De la Teoría a la Práctica Clínica"
-author: "Antonio Otal"
+subtitle: "*Large Language Models* en la Práctica Clínica"
+author:
+  - name: "Antonio Otal Palacín"
+    affiliations: 
+        - "Hospital Universitario Arnau de Vilanova"
+        - "Universitat de Lleida"
 format:
   revealjs:
     embed-resources: true
@@ -44,7 +48,7 @@ Históricamente, la informática médica ha sido rígida. La irrupción de los <
 :::
 
 ::: {.column width="40%"}
-![](images/figura1.png){.absolute top=100 right=0 width=750}
+![](images/figura1.png){.absolute top=100 right=0 width=600}
 :::
 :::
 
@@ -244,6 +248,7 @@ Los <abbr title="Large Language Models">LLMs</abbr> no son nativamente superiore
 ::: {.columns}
 ::: {.column width="50%"}
 **Gradient Boosting (XGBoost)**
+
 * Cortes precisos (Edad < 65).
 * Superior en predicción de mortalidad tabular.
 * F1-score COVID-19: **0.87** [@LFAM_ghaffarzadehesfahani2025large].
@@ -251,6 +256,7 @@ Los <abbr title="Large Language Models">LLMs</abbr> no son nativamente superiore
 
 ::: {.column width="50%"}
 **<abbr title="Large Language Models">LLMs</abbr> (GPT-4 / Llama)**
+
 * Tokenizan números (pierden magnitud).
 * F1-score COVID-19 (Zero-shot): **0.43**.
 * Requieren **Serialización**.
@@ -328,7 +334,9 @@ Permite respuestas fundamentadas: *"La creatinina subió de 0.9 a 1.5 en el últ
 ::: {.columns}
 ::: {.column width="33%"}
 ### Notas <abbr title="Subjetivo, Objetivo, Análisis, Plan">SOAP</abbr>
+
 Automatización de documentación.
+
 * Filtra charla trivial.
 * Sintetiza hallazgos.
 * Propone plan basado en guías.
@@ -337,14 +345,18 @@ Automatización de documentación.
 
 ::: {.column width="33%"}
 ### Resumen de Alta
+
 Condensación de hospitalizaciones complejas.
+
 * Atención de larga distancia para identificar hitos (Ingreso $\to$ <abbr title="Unidad de Cuidados Intensivos">UCI</abbr> $\to$ Alta).
 * Lenguaje accesible para el paciente.
 :::
 
 ::: {.column width="33%"}
 ### Escriba Digital
+
 Análisis en tiempo real.
+
 * Uso de <abbr title="Automatic Speech Recognition">ASR</abbr> + LLM.
 * Detecta matices: "Supongo que tomaré la pastilla..." $\to$ Alerta de baja adherencia.
 :::
@@ -505,7 +517,7 @@ graph TD
     A --> H4(Lingüista)
     end
     
-    H1 -->|Nódulo + Tabaquismo| C[Concatenación]
+    H1 -->|Nódulo + Tabaquismo| C
     H2 -->|Disnea + FEVI| C
     H3 -->|Quimio + Previos| C
     H4 -->|Negación Identificada| C
@@ -513,6 +525,9 @@ graph TD
     C --> D[Diagnóstico Unificado]
     style A fill:#38bdf8,color:#000
     style D fill:#38bdf8,color:#000
+    classDef transparentNode fill:none,stroke:#fff,color:#fff;
+    class H1,H2,H3,H4,C transparentNode;
+    linkStyle 0,1,2,3,4,5,6,7,8 stroke:#fff,color:#000,stroke-width:2px;
 ```
 
 ::: {.notes}
@@ -571,7 +586,7 @@ graph TD
     *   Uso: Escribir el informe de alta o hablar con el paciente.
 :::
 
-## Ingeniería de Prompts: La Evidencia (2024-2025)
+## Ingeniería de Prompts: La Evidencia 
 
 No es magia, es alinear algoritmos.
 
@@ -695,18 +710,7 @@ Los LLM fallan en matemáticas. Solución: Arquitectura **MeNTi** [@ACASRFZhu202
 2. **Sub-Tool:** Script Python convierte unidades (mmol/L  mg/dL).
 3. **Main-Tool:** Calculadora de riesgo recibe datos limpios.
 
-```{mermaid}
-sequenceDiagram
-    participant LLM as Orquestador (Cerebro)
-    participant Py as Script Python
-    participant Calc as Calculadora Riesgo
-    
-    LLM->>LLM: Detecta necesidad de cálculo
-    LLM->>Py: Convertir mmol/L a mg/dL
-    Py-->>LLM: Valor Exacto (Numérico)
-    LLM->>Calc: Input Datos Limpios
-    Calc-->>LLM: Score de Riesgo
-```
+
 :::
 :::
 
@@ -936,7 +940,7 @@ graph LR
 
 ```
 
-* **Ingesta:** Chunking semántico (no cortar tablas de dosis).
+* **Ingesta:** Chunking semántico.
 * **Recuperación:** Búsqueda por significado, no solo palabras clave.
 * **Generación:** Prompt "Usa EXCLUSIVAMENTE el contexto proporcionado".
 
@@ -1027,7 +1031,7 @@ graph BT
     end
     In[Input] --> W
     In --> A
-    W --> Suma(("+"))
+    W --> Suma["+"]
     B --> Suma
     Suma --> Out[Output]
     
@@ -1119,9 +1123,9 @@ La seguridad del paciente reside en la arquitectura, no solo en el modelo.
 :::
 
 
-# Módulo 4: Infraestructura Crítica y Despliegue {background-color="#111827"}
+# Módulo 4: Infraestructura Crítica y Despliegue {background-color="#0f172a"}
 
-# Introducción: El Cambio de Paradigma {background-color="#020617"}
+# Introducción: El Cambio de Paradigma {background-color="#0f172a"}
 
 ## Del "Hype" a la Ingeniería Robusta
 
@@ -1162,7 +1166,7 @@ La seguridad del paciente reside en la arquitectura, no solo en el modelo.
     * Estrategias *On-Premise* vs *Cloud*.
     * Tecnologías de seguridad: <abbr title="Attribute-Based Access Control - Control de Acceso Basado en Atributos">ABAC</abbr> y Enclaves Seguros.
 
-# 1. Interoperabilidad: Model Context Protocol (MCP) {background-color="#1e293b"}
+# 1. Interoperabilidad: Model Context Protocol (MCP) {background-color="#0f172a"}
 
 ## El Problema de las Integraciones Ad-Hoc
 
@@ -1173,20 +1177,13 @@ Antes: Cada conexión requería una "transfusión" de código costosa.
 ::: {.columns}
 ::: {.column width="45%"}
 **Enfoque Tradicional**
+
 * Integraciones API frágiles ("Custom Pipelines").
+
 * Mantenimiento insostenible `n * m` conexiones.
-* <abbr title="Electronic Health Record - Historia Clínica Electrónica">EHR</abbr> (Epic/Cerner) <-> Modelo (GPT/Llama).
-:::
-
-
-
-::: {.column width="50%"}
-**La Solución <abbr title="Model Context Protocol">MCP</abbr>**
-* Estándar abierto (Open Standard).
-* **Analogía Médica:** El "Donante Universal (O-)" de la infraestructura de datos.
-* Cualquier "Host" de IA conecta con cualquier "Servidor" de datos.
 
 ```{mermaid}
+%%| fig-width: 100%
 graph TD
     subgraph "Caos (Tradicional)"
     A[EHR] <--> B[GPT-4]
@@ -1202,8 +1199,31 @@ graph TD
     M --> AI2[Llama 3]
     end
     
+    style A fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style B fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style C fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style D fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style H1 fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style H2 fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style AI1 fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style AI2 fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
     style M fill:#38bdf8,stroke:#fff,stroke-width:2px,color:#000
+    
+    linkStyle default stroke:#e2e8f0,stroke-width:2px;
 ```
+:::
+
+
+
+::: {.column width="50%"}
+**La Solución <abbr title="Model Context Protocol">MCP</abbr>**
+
+* Estándar abierto (Open Standard).
+
+* **Analogía Médica:** El "Donante Universal (O-)" de la infraestructura de datos.
+
+* Cualquier "Host" de IA conecta con cualquier "Servidor" de datos.
+
 :::
 :::
 
@@ -1236,6 +1256,17 @@ graph LR
     Server --> DB
     Server --> PACS
 
+    style UI fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style LLM fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style Client fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style Server fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style Tool1 fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style Tool2 fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style Res1 fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style DB fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    style PACS fill:transparent,stroke:#e2e8f0,stroke-width:2px,color:#fff
+    
+    linkStyle default stroke:#e2e8f0,stroke-width:2px;
 ```
 
 * **Host:** Contenedor de la IA (Chatbot, IDE).
@@ -1270,7 +1301,7 @@ Incluso si un usuario malicioso convence al <abbr title="Large Language Model">L
 
 
 
-# 2. Infraestructura: Estrategia y Hardware {background-color="#334155"}
+# 2. Infraestructura: Estrategia y Hardware {background-color="#0f172a"}
 
 ## Economía del Despliegue: Cloud vs. On-Premise
 
@@ -1367,7 +1398,7 @@ Estrategias de defensa en profundidad para datos sensibles (<abbr title="Protect
 **Diferencias Regulatorias**
 
 * **<abbr title="General Data Protection Regulation">GDPR</abbr> (UE):** Soberanía estricta, derecho al olvido (difícil en pesos neuronales).
-* **<abbr title="Health Insurance Portability and Accountability Act">HIPAA</abbr> (EEUU):** Foco en seguridad y BAA.
+* **<abbr title="Health Insurance Portability and Accountability Act">HIPAA</abbr> (EEUU):** Foco en seguridad y <abbr title="Business Associate Agreement">BAA</abbr>.
 :::
 
 ::: {.column width="50%"}
@@ -1379,7 +1410,7 @@ Estrategias de defensa en profundidad para datos sensibles (<abbr title="Protect
 :::
 :::
 
-# Conclusión: Ecosistema Híbrido 2026 {background-color="#4c1d95"}
+# Conclusión: Ecosistema Híbrido 2026 {background-color="#0f172a"}
 
 ## Hacia una Orquestación Inteligente
 
@@ -1556,7 +1587,7 @@ La solución estándar de oro es **<abbr title="Retrieval-Augmented Generation (
 
 * **Mecanismo:** Convierte la generación en un problema de búsqueda.
 * **Anclaje:** El modelo se ve obligado a sintetizar respuestas basadas *exclusivamente* en documentos recuperados (Guías, PubMed).
-* **Grafos de Conocimiento:** Integración con SNOMED CT o UMLS para validación lógica (ej. verificar rangos de insulina).
+* **Grafos de Conocimiento:** Integración con <abbr title="Systematized Nomenclature of Medicine - Clinical Terms">SNOMED CT</abbr> o <abbr title="Unified Medical Language System">UMLS</abbr> para validación lógica (ej. verificar rangos de insulina).
 :::
 
 ::: {.column width="40%"}
